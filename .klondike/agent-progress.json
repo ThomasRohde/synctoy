@@ -111,18 +111,18 @@
     ],
     "priorityFeatures": [
       {
-        "id": "F027",
-        "description": "iOS Touch Target Optimization - ensure all interactive elements meet Apple 44x44pt minimum touch target guidelines",
-        "status": "in-progress"
-      },
-      {
         "id": "F029",
         "description": "iOS Input Zoom Prevention - prevent Safari auto-zoom on input focus while maintaining accessibility",
-        "status": "not-started"
+        "status": "in-progress"
       },
       {
         "id": "F028",
         "description": "iOS Haptic Feedback - add subtle vibration feedback for key interactions like sending items and completing actions",
+        "status": "not-started"
+      },
+      {
+        "id": "F030",
+        "description": "iOS Context Menu Prevention - disable long-press context menus on interactive elements for native app feel",
         "status": "not-started"
       }
     ]

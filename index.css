@@ -19,6 +19,13 @@ body {
     -webkit-overflow-scrolling: touch;
 }
 
+/* Prevent iOS Safari auto-zoom on input focus by ensuring minimum 16px font size */
+input,
+textarea,
+select {
+    font-size: 16px;
+}
+
 /* Hide scrollbars but allow scrolling */
 .scrollbar-hidden {
     scrollbar-width: none;

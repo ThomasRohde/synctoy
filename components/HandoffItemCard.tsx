@@ -278,7 +278,7 @@ export function HandoffItemCard({ item, onStatusChange }: HandoffItemCardProps) 
                                 value={passphraseInput}
                                 onChange={(e) => setPassphraseInput(e.target.value)}
                                 placeholder="Passphrase"
-                                className="flex-1 px-3 py-2 bg-white/10 rounded-lg text-sm border border-white/10 focus:border-primary outline-none"
+                                className="flex-1 px-3 py-2 bg-white/10 rounded-lg border border-white/10 focus:border-primary outline-none"
                                 onKeyDown={(e) => {
                                     if (e.key === 'Enter') {
                                         handleDecrypt(passphraseInput);

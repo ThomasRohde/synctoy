@@ -376,7 +376,7 @@ export function Settings() {
                                             onChange={(e) => setCloudUrlInput(e.target.value)}
                                             onBlur={handleUpdateCloudUrl}
                                             placeholder="https://your-dexie-cloud.example.com/db123abc"
-                                            className="w-full px-4 py-2 bg-white/10 rounded-lg border border-white/10 focus:border-primary outline-none font-mono text-sm"
+                                            className="w-full px-4 py-2 bg-white/10 rounded-lg border border-white/10 focus:border-primary outline-none font-mono"
                                         />
                                         {cloudUrlInput !== (deviceProfile.cloudUrl || '') && (
                                             <button

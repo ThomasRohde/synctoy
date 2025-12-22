@@ -9,3 +9,4 @@ export { useCurrentUser } from './useCurrentUser';
 export { useSwipeGesture } from './useSwipeGesture';
 export { usePullToRefresh } from './usePullToRefresh';
 export { useServiceWorker } from './useServiceWorker';
+export { usePwaInstall } from './usePwaInstall';

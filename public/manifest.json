@@ -4,24 +4,36 @@
   "description": "Cross-device URL and text inbox with cloud sync and encryption",
   "start_url": "./",
   "scope": "./",
+  "id": "/synctoy/",
   "display": "standalone",
   "background_color": "#0f172a",
-  "theme_color": "#0f172a",
-  "orientation": "portrait-primary",
+  "theme_color": "#3b82f6",
+  "orientation": "any",
   "icons": [
     {
-      "src": "/icon-192.svg",
+      "src": "icon-192.svg",
       "sizes": "192x192",
       "type": "image/svg+xml",
-      "purpose": "any maskable"
+      "purpose": "any"
     },
     {
-      "src": "/icon-192.svg",
+      "src": "icon-192.svg",
       "sizes": "512x512",
       "type": "image/svg+xml",
-      "purpose": "any maskable"
+      "purpose": "any"
+    },
+    {
+      "src": "icon-192.svg",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    },
+    {
+      "src": "icon-192.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
     }
   ],
-  "categories": ["productivity", "utilities"],
-  "screenshots": []
+  "categories": ["productivity", "utilities"]
 }

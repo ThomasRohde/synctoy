@@ -82,6 +82,8 @@ export default defineConfig({
                 orientation: 'any',
                 start_url: './',
                 scope: './',
+                id: '/synctoy/',
+                categories: ['productivity', 'utilities'],
                 icons: [
                     {
                         src: 'icon-192.svg',

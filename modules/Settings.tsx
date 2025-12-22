@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useApp, useNotification, useDb } from '../context';
 import { Header, CategorySelector } from '../components';
-import { useSyncState, useCurrentUser, type SyncStatus } from '../hooks';
+import { useSyncState, useCurrentUser, usePwaInstall, type SyncStatus } from '../hooks';
 import { cloudDb } from '../utils/storage/db';
 
 // Helper to get sync status display info
@@ -45,6 +45,7 @@ export function Settings() {
     const db = useDb();
     const syncState = useSyncState();
     const currentUser = useCurrentUser();
+    const pwaInstall = usePwaInstall();
     const [activeSection, setActiveSection] = useState('device');
     const [isClearingArchived, setIsClearingArchived] = useState(false);
     const [cloudUrlInput, setCloudUrlInput] = useState(deviceProfile.cloudUrl || '');
@@ -538,6 +539,42 @@ export function Settings() {
                                         A minimal, cross-device inbox for URLs and text with 
                                         device targeting and optional end-to-end encryption.
                                     </p>
+                                </div>
+
+                                {/* Install App card */}
+                                <div className="glass-card rounded-xl p-4 space-y-3">
+                                    <h3 className="font-medium flex items-center gap-2">
+                                        <span className="material-symbols-outlined">install_desktop</span>
+                                        Install App
+                                    </h3>
+                                    {pwaInstall.isInstalled ? (
+                                        <div className="flex items-center gap-3 p-3 bg-green-500/10 rounded-lg border border-green-500/20">
+                                            <span className="material-symbols-outlined text-green-400">check_circle</span>
+                                            <p className="text-sm text-gray-300">App is installed on this device</p>
+                                        </div>
+                                    ) : pwaInstall.canInstall ? (
+                                        <div className="space-y-3">
+                                            <p className="text-sm text-gray-400">
+                                                Install Handoff Lite for quick access from your desktop or taskbar.
+                                            </p>
+                                            <button
+                                                onClick={async () => {
+                                                    const accepted = await pwaInstall.promptInstall();
+                                                    if (accepted) {
+                                                        notify.success('App installed successfully!');
+                                                    }
+                                                }}
+                                                className="w-full px-4 py-3 min-h-[44px] bg-primary text-white rounded-lg hover:bg-primary/80 transition-colors flex items-center justify-center gap-2"
+                                            >
+                                                <span className="material-symbols-outlined">download</span>
+                                                Install Handoff Lite
+                                            </button>
+                                        </div>
+                                    ) : (
+                                        <p className="text-sm text-gray-400">
+                                            Open this app in Chrome, Edge, or another compatible browser to enable installation.
+                                        </p>
+                                    )}
                                 </div>
 
                                 <div className="glass-card rounded-xl p-4 space-y-3">

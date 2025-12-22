@@ -9,7 +9,7 @@ interface ServiceWorkerState {
 
 /**
  * Hook to manage PWA service worker registration and updates.
- * Uses 'prompt' strategy - user is notified when an update is available.
+ * Uses 'autoUpdate' strategy - updates are applied automatically.
  */
 export function useServiceWorker(): ServiceWorkerState {
     const [needsRefresh, setNeedsRefresh] = useState(false);
@@ -21,17 +21,20 @@ export function useServiceWorker(): ServiceWorkerState {
         const updateServiceWorker = registerSW({
             immediate: true,
             onNeedRefresh() {
-                // New content available, prompt user to refresh
+                // With autoUpdate, this triggers automatic refresh
+                console.info('[SW] New content available, refreshing...');
                 setNeedsRefresh(true);
             },
             onOfflineReady() {
                 // App is ready to work offline
+                console.info('[SW] App ready for offline use');
                 setOfflineReady(true);
             },
             onRegisteredSW(swUrl, registration) {
                 // Check for updates periodically (every 30 seconds)
                 if (registration) {
                     setInterval(() => {
+                        console.info('[SW] Checking for updates...');
                         registration.update();
                     }, 30 * 1000);
                 }

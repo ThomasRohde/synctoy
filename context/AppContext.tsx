@@ -21,6 +21,32 @@ function isSetupCompleteFromStorage(): boolean {
     }
 }
 
+function getSharePayloadFromLocation(): SharePayload | null {
+    const search = window.location.search;
+    const hash = window.location.hash;
+    if (!search && !hash.includes('?')) {
+        return null;
+    }
+
+    const queryString = search || hash.split('?')[1] || '';
+    if (!queryString) {
+        return null;
+    }
+
+    const params = parseShareParams(queryString);
+    if (!params.content) {
+        return null;
+    }
+
+    return {
+        content: params.content,
+        title: params.title,
+        category: params.category as DeviceProfile['category'],
+        sensitive: params.sensitive,
+        autoSend: params.autoSend,
+    };
+}
+
 interface AppContextValue {
     // Navigation
     route: Route;
@@ -74,22 +100,10 @@ export function AppProvider({ children }: { children: ReactNode }) {
                 }
 
                 // Check for share params in URL
-                const search = window.location.search;
-                const hash = window.location.hash;
-
-                if (search || hash.includes('?')) {
-                    const queryString = search || hash.split('?')[1] || '';
-                    const params = parseShareParams(queryString);
-                    if (params.content) {
-                        setSharePayload({
-                            content: params.content,
-                            title: params.title,
-                            category: params.category as DeviceProfile['category'],
-                            sensitive: params.sensitive,
-                            autoSend: params.autoSend,
-                        });
-                        setRoute('send');
-                    }
+                const sharePayloadFromUrl = getSharePayloadFromLocation();
+                if (sharePayloadFromUrl) {
+                    setSharePayload(sharePayloadFromUrl);
+                    setRoute('send');
                 }
 
                 // Check if path indicates share route
@@ -141,9 +155,17 @@ export function AppProvider({ children }: { children: ReactNode }) {
     // Listen for hash changes
     useEffect(() => {
         const handleHashChange = () => {
-            const hash = window.location.hash.slice(1) as Route;
-            if (['inbox', 'send', 'settings', 'share'].includes(hash)) {
-                setRoute(hash);
+            const hash = window.location.hash.slice(1);
+            const [hashRoute] = hash.split('?');
+            const normalizedRoute = hashRoute.replace(/^\//, '') as Route;
+            if (['inbox', 'send', 'settings', 'share'].includes(normalizedRoute)) {
+                setRoute(normalizedRoute);
+            }
+
+            const sharePayloadFromUrl = getSharePayloadFromLocation();
+            if (sharePayloadFromUrl) {
+                setSharePayload(sharePayloadFromUrl);
+                setRoute('send');
             }
         };
 

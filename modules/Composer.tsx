@@ -180,10 +180,11 @@ export function Composer() {
         setSessionPassphrase
     ]);
 
-    // Auto-send when sharePayload has autoSend=true (non-sensitive only)
+    // Auto-send when sharePayload allows it (non-sensitive only)
     useEffect(() => {
         if (
-            sharePayload?.autoSend &&
+            sharePayload &&
+            sharePayload.autoSend !== false &&
             !sharePayload.sensitive &&
             content.trim() &&
             !autoSendTriggered &&

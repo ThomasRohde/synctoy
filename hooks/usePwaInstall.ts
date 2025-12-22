@@ -14,8 +14,31 @@ interface PwaInstallState {
     canInstall: boolean;
     /** Whether the app is already installed as a PWA */
     isInstalled: boolean;
+    /** Browser-specific install instructions when automatic prompt isn't available */
+    manualInstallInstructions: string | null;
     /** Trigger the install prompt */
     promptInstall: () => Promise<boolean>;
+}
+
+/**
+ * Detect browser type for install instructions
+ */
+function getBrowserInfo(): { name: string; supportsInstallPrompt: boolean } {
+    const ua = navigator.userAgent;
+    
+    if (ua.includes('Edg/')) {
+        return { name: 'Edge', supportsInstallPrompt: true };
+    }
+    if (ua.includes('Chrome') && !ua.includes('Edg')) {
+        return { name: 'Chrome', supportsInstallPrompt: true };
+    }
+    if (ua.includes('Firefox')) {
+        return { name: 'Firefox', supportsInstallPrompt: false };
+    }
+    if (ua.includes('Safari') && !ua.includes('Chrome')) {
+        return { name: 'Safari', supportsInstallPrompt: false };
+    }
+    return { name: 'Unknown', supportsInstallPrompt: false };
 }
 
 /**
@@ -25,6 +48,8 @@ interface PwaInstallState {
 export function usePwaInstall(): PwaInstallState {
     const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
     const [isInstalled, setIsInstalled] = useState(false);
+
+    const browserInfo = getBrowserInfo();
 
     useEffect(() => {
         // Check if already installed
@@ -100,9 +125,29 @@ export function usePwaInstall(): PwaInstallState {
         }
     }, [deferredPrompt]);
 
+    // Generate manual install instructions based on browser
+    const getManualInstructions = (): string | null => {
+        if (isInstalled) return null;
+        if (deferredPrompt) return null; // Automatic install available
+        
+        switch (browserInfo.name) {
+            case 'Chrome':
+                return 'Click the install icon (⊕) in the address bar, or use Menu (⋮) → "Install Handoff Lite"';
+            case 'Edge':
+                return 'Click the install icon (⊕) in the address bar, or use Menu (…) → Apps → "Install Handoff Lite"';
+            case 'Firefox':
+                return 'Firefox doesn\'t support PWA installation. Use Chrome or Edge for the best experience.';
+            case 'Safari':
+                return 'Use the Share button → "Add to Dock" to install this app.';
+            default:
+                return 'Use the browser menu to install this app, or try Chrome/Edge for better PWA support.';
+        }
+    };
+
     return {
         canInstall: deferredPrompt !== null && !isInstalled,
         isInstalled,
+        manualInstallInstructions: getManualInstructions(),
         promptInstall,
     };
 }

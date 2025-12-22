@@ -24,7 +24,6 @@ klondike feature list  # List all features
 ### Current Priority Features
 | ID | Description | Status |
 |----|-------------|--------|
-| F031 | Markdown Rendering for Text Handoffs - detect and render markdown content from chatbots (Claude/ChatGPT style) with syntax highlighting and proper formatting | 🔄 In progress |
 
 ---
 

@@ -121,12 +121,6 @@
       ".klondike/agent-progress.json",
       "agent-progress.md"
     ],
-    "priorityFeatures": [
-      {
-        "id": "F031",
-        "description": "Markdown Rendering for Text Handoffs - detect and render markdown content from chatbots (Claude/ChatGPT style) with syntax highlighting and proper formatting",
-        "status": "in-progress"
-      }
-    ]
+    "priorityFeatures": []
   }
 }

@@ -63,13 +63,13 @@ export const UpdatePrompt: React.FC<UpdatePromptProps> = ({
                         <div className="flex gap-2 mt-3">
                             <button
                                 onClick={onDismiss}
-                                className="flex-1 px-3 py-2 text-sm text-slate-300 hover:text-white hover:bg-slate-700 rounded-lg transition-colors"
+                                className="flex-1 px-3 py-3 min-h-[44px] text-sm text-slate-300 hover:text-white hover:bg-slate-700 active:bg-slate-600 rounded-lg transition-colors touch-manipulation"
                             >
                                 Later
                             </button>
                             <button
                                 onClick={onUpdate}
-                                className="flex-1 px-3 py-2 text-sm bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors font-medium"
+                                className="flex-1 px-3 py-3 min-h-[44px] text-sm bg-blue-500 hover:bg-blue-600 active:bg-blue-700 text-white rounded-lg transition-colors font-medium touch-manipulation"
                             >
                                 Refresh Now
                             </button>

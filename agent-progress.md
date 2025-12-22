@@ -2,7 +2,7 @@
 
 ## Project: synctoy
 ## Started: 2025-12-22
-## Current Status: In Progress
+## Current Status: Session Ended
 ## PRD Source: [.\SYNCTOY.md](.\SYNCTOY.md)
 
 ---
@@ -24,7 +24,6 @@ klondike feature list  # List all features
 ### Current Priority Features
 | ID | Description | Status |
 |----|-------------|--------|
-| F021 | Dexie Cloud URL Configurable via Settings - move cloud sync URL from environment variable to browser localStorage, allowing users to configure sync through the Settings UI without requiring rebuild | 🔄 In progress |
 | F022 | Dexie Cloud Email OTP Authentication - implement login flow with email entry and OTP verification for cross-device sync with user identity | ⏳ Not started |
 
 ---
@@ -130,20 +129,20 @@ klondike feature list  # List all features
 
 ### Session 5 - 2025-12-22
 **Agent**: Coding Agent
-**Duration**: (in progress)
-**Focus**: F021 - Make Dexie Cloud URL configurable via Settings
+**Duration**: ~session
+**Focus**: Completed F021: Dexie Cloud URL configurable via Settings UI
 
 #### Completed
 - None
 
 #### In Progress
-- Session started
+- None
 
 #### Blockers
 - None
 
 #### Recommended Next Steps
-1. Continue implementation
+1. F022: Implement Dexie Cloud Email OTP Authentication for user identity and sync
 
 #### Technical Notes
 - None

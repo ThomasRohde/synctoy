@@ -559,11 +559,13 @@
         "URL validation prevents invalid URLs"
       ],
       "estimatedEffort": null,
-      "status": "in-progress",
-      "passes": false,
-      "verifiedAt": null,
-      "verifiedBy": null,
-      "evidenceLinks": [],
+      "status": "verified",
+      "passes": true,
+      "verifiedAt": "2025-12-22T05:03:23.770943",
+      "verifiedBy": "coding-agent",
+      "evidenceLinks": [
+        "Successfully implemented cloud URL configuration in Settings UI. Users can now enter/edit/clear Dexie Cloud URL without rebuilding. Changes are persisted in DeviceProfile and dynamically update the database connection. Tested UI in Settings > Data section."
+      ],
       "blockedBy": null,
       "lastWorkedOn": "2025-12-22T05:00:38.703908",
       "notes": "Implementation: Use window.localStorage directly (not Dexie persistedState table) since the URL is needed BEFORE database initialization. Read URL in db.ts constructor using localStorage.getItem('dexieCloudUrl'). Settings.tsx adds text input in Data section to edit URL. Edge cases: Empty URL = local-only mode, malformed URLs should be rejected. Dependencies: None - this is foundational. Context: Currently requires environment variable and rebuild to change sync URL, which is poor UX for end users. Gotchas: Database instance is created at module load time, so URL change requires page refresh - show toast explaining this. Don't put URL in Dexie tables because those are initialized after the DB (circular dependency)."
@@ -596,8 +598,8 @@
   ],
   "metadata": {
     "createdAt": "2025-12-22T03:40:28.896801",
-    "lastUpdated": "2025-12-22T04:59:02.156666",
+    "lastUpdated": "2025-12-22T05:03:23.770955",
     "totalFeatures": 22,
-    "passingFeatures": 20
+    "passingFeatures": 21
   }
 }

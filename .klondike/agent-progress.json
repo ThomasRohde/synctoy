@@ -1,7 +1,7 @@
 {
   "projectName": "synctoy",
   "startedAt": "2025-12-22T03:40:28.896801",
-  "currentStatus": "In Progress",
+  "currentStatus": "Session Ended",
   "sessions": [
     {
       "sessionNumber": 1,
@@ -76,14 +76,14 @@
       "sessionNumber": 5,
       "date": "2025-12-22",
       "agent": "Coding Agent",
-      "duration": "(in progress)",
-      "focus": "F021 - Make Dexie Cloud URL configurable via Settings",
+      "duration": "~session",
+      "focus": "Completed F021: Dexie Cloud URL configurable via Settings UI",
       "completed": [],
-      "inProgress": [
-        "Session started"
-      ],
+      "inProgress": [],
       "blockers": [],
-      "nextSteps": [],
+      "nextSteps": [
+        "F022: Implement Dexie Cloud Email OTP Authentication for user identity and sync"
+      ],
       "technicalNotes": []
     }
   ],
@@ -96,11 +96,6 @@
       "agent-progress.md"
     ],
     "priorityFeatures": [
-      {
-        "id": "F021",
-        "description": "Dexie Cloud URL Configurable via Settings - move cloud sync URL from environment variable to browser localStorage, allowing users to configure sync through the Settings UI without requiring rebuild",
-        "status": "in-progress"
-      },
       {
         "id": "F022",
         "description": "Dexie Cloud Email OTP Authentication - implement login flow with email entry and OTP verification for cross-device sync with user identity",

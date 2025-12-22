@@ -1,10 +1,10 @@
 import { useMemo, useState } from 'react';
 import { useApp } from '../context';
-import { useHandoffItems } from '../hooks';
+import { useHandoffItems, usePullToRefresh } from '../hooks';
 import { Header, FilterTabs, HandoffItemCard, EmptyState, LoadingSpinner } from '../components';
 
 export function Inbox() {
-    const { deviceProfile, inboxFilter, setInboxFilter, refreshTrigger, navigate } = useApp();
+    const { deviceProfile, inboxFilter, setInboxFilter, refreshTrigger, navigate, refreshItems } = useApp();
     const [searchQuery, setSearchQuery] = useState('');
 
     const { items, isLoading } = useHandoffItems(
@@ -12,6 +12,15 @@ export function Inbox() {
         deviceProfile.category,
         refreshTrigger
     );
+
+    // Pull-to-refresh gesture
+    const { pullState, handlers: pullHandlers, setContainerRef } = usePullToRefresh({
+        onRefresh: async () => {
+            await refreshItems();
+        },
+        threshold: 80,
+        enabled: !isLoading,
+    });
 
     // Calculate counts for filter badges
     const counts = useMemo(() => {
@@ -108,8 +117,33 @@ export function Inbox() {
             />
 
             <main
-                className="pt-[var(--nav-height)] pb-[calc(var(--bottom-nav-height)+16px)] px-4"
+                ref={setContainerRef}
+                className="pt-[var(--nav-height)] pb-[calc(var(--bottom-nav-height)+16px)] px-4 overflow-y-auto"
+                style={{
+                    height: '100vh',
+                    maxHeight: 'var(--app-vh)',
+                }}
+                {...pullHandlers}
             >
+                {/* Pull-to-refresh indicator */}
+                {(pullState.isPulling || pullState.isRefreshing) && (
+                    <div
+                        className="flex items-center justify-center transition-all"
+                        style={{
+                            height: `${pullState.pullDistance}px`,
+                            opacity: Math.min(pullState.pullDistance / 80, 1),
+                        }}
+                    >
+                        <span
+                            className={`material-symbols-outlined text-primary ${
+                                pullState.isRefreshing ? 'animate-spin' : ''
+                            }`}
+                        >
+                            {pullState.isRefreshing ? 'sync' : 'refresh'}
+                        </span>
+                    </div>
+                )}
+
                 <div className="max-w-2xl mx-auto">
                     {/* Filter tabs */}
                     <div className="py-4 sticky top-[var(--nav-height)] z-10 bg-background-dark">

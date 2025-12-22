@@ -1,7 +1,7 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import type { HandoffItem, PlainContent } from '../types';
 import { useApp, useNotification, useDb } from '../context';
-import { useClipboard } from '../hooks';
+import { useClipboard, useSwipeGesture } from '../hooks';
 import { decryptContent } from '../utils/crypto';
 import { getUrlPreview, getTextPreview, getDomain, getFaviconUrl } from '../utils/url';
 
@@ -20,9 +20,34 @@ export function HandoffItemCard({ item, onStatusChange }: HandoffItemCardProps) 
     const [showPassphraseInput, setShowPassphraseInput] = useState(false);
     const [passphraseInput, setPassphraseInput] = useState('');
     const [isExpanded, setIsExpanded] = useState(false);
+    const cardRef = useRef<HTMLDivElement>(null);
 
     const isEncrypted = item.isSensitive && 'ciphertext' in item.content;
     const content = decryptedContent ?? (isEncrypted ? null : (item.content as PlainContent));
+
+    // Swipe-to-archive gesture
+    const { swipeState, handlers } = useSwipeGesture({
+        onSwipeLeft: () => {
+            if (item.status !== 'archived') {
+                handleArchive();
+            }
+        },
+        threshold: 100,
+        enabled: item.status !== 'archived',
+    });
+
+    // Apply swipe transform
+    useEffect(() => {
+        if (cardRef.current) {
+            const transform = swipeState.isSwiping
+                ? `translateX(${swipeState.offsetX}px)`
+                : 'translateX(0)';
+            const transition = swipeState.isSwiping ? 'none' : 'transform 0.2s ease-out';
+            
+            cardRef.current.style.transform = transform;
+            cardRef.current.style.transition = transition;
+        }
+    }, [swipeState]);
 
     const handleDecrypt = async (passphrase: string) => {
         if (!isEncrypted) return;
@@ -141,7 +166,22 @@ export function HandoffItemCard({ item, onStatusChange }: HandoffItemCardProps) 
     };
 
     return (
-        <div className="glass-card rounded-xl overflow-hidden animate-fade-in-up">
+        <div
+            ref={cardRef}
+            className="relative overflow-visible"
+            {...handlers}
+        >
+            {/* Swipe background indicator */}
+            {swipeState.isSwiping && swipeState.direction === 'left' && (
+                <div className="absolute inset-0 bg-red-500/20 rounded-xl flex items-center justify-end px-6">
+                    <span className="material-symbols-outlined text-red-400 text-2xl">
+                        archive
+                    </span>
+                </div>
+            )}
+
+            {/* Main card */}
+            <div className="glass-card rounded-xl overflow-hidden animate-fade-in-up">
             {/* Main card content */}
             <div className="p-4">
                 {/* Header row */}

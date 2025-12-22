@@ -111,14 +111,9 @@
     ],
     "priorityFeatures": [
       {
-        "id": "F028",
-        "description": "iOS Haptic Feedback - add subtle vibration feedback for key interactions like sending items and completing actions",
-        "status": "in-progress"
-      },
-      {
         "id": "F030",
         "description": "iOS Context Menu Prevention - disable long-press context menus on interactive elements for native app feel",
-        "status": "not-started"
+        "status": "in-progress"
       }
     ]
   }

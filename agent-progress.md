@@ -24,8 +24,7 @@ klondike feature list  # List all features
 ### Current Priority Features
 | ID | Description | Status |
 |----|-------------|--------|
-| F028 | iOS Haptic Feedback - add subtle vibration feedback for key interactions like sending items and completing actions | 🔄 In progress |
-| F030 | iOS Context Menu Prevention - disable long-press context menus on interactive elements for native app feel | ⏳ Not started |
+| F030 | iOS Context Menu Prevention - disable long-press context menus on interactive elements for native app feel | 🔄 In progress |
 
 ---
 

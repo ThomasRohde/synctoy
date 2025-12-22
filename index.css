@@ -26,6 +26,36 @@ select {
     font-size: 16px;
 }
 
+/* Prevent iOS context menu on interactive elements for native app feel */
+button,
+[role="button"],
+a[role="button"],
+.glass-card img,
+.material-symbols-outlined {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+    touch-action: manipulation;
+}
+
+/* Allow text selection in content areas */
+p,
+pre,
+code {
+    -webkit-user-select: text;
+    user-select: text;
+}
+
+/* Prevent double-tap zoom delay on all interactive elements */
+button,
+a,
+[role="button"],
+input,
+textarea,
+select {
+    touch-action: manipulation;
+}
+
 /* Hide scrollbars but allow scrolling */
 .scrollbar-hidden {
     scrollbar-width: none;

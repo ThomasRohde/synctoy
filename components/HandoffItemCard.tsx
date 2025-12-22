@@ -2,8 +2,9 @@ import { useState, useRef, useEffect } from 'react';
 import type { HandoffItem, PlainContent, EncryptedContent } from '../types';
 import { useApp, useNotification, useDb } from '../context';
 import { useClipboard, useSwipeGesture } from '../hooks';
-import { decryptContent, haptics } from '../utils';
+import { decryptContent, haptics, isMarkdown } from '../utils';
 import { getUrlPreview, getTextPreview, getDomain, getFaviconUrl } from '../utils/url';
+import { MarkdownRenderer } from './MarkdownRenderer';
 
 interface HandoffItemCardProps {
     item: HandoffItem;
@@ -265,8 +266,12 @@ export function HandoffItemCard({ item, onStatusChange }: HandoffItemCardProps) 
 
                 {/* Expanded text content */}
                 {isExpanded && content?.text && (
-                    <div className="mb-3 p-3 bg-black/20 rounded-lg">
-                        <p className="text-sm whitespace-pre-wrap break-words">{content.text}</p>
+                    <div className="mb-3 p-3 bg-black/20 rounded-lg max-h-96 overflow-y-auto">
+                        {isMarkdown(content.text) ? (
+                            <MarkdownRenderer content={content.text} />
+                        ) : (
+                            <p className="text-sm whitespace-pre-wrap break-words">{content.text}</p>
+                        )}
                     </div>
                 )}
 

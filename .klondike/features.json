@@ -841,13 +841,13 @@
         "Toggle available to view raw source if needed"
       ],
       "estimatedEffort": null,
-      "status": "not-started",
+      "status": "in-progress",
       "passes": false,
       "verifiedAt": null,
       "verifiedBy": null,
       "evidenceLinks": [],
       "blockedBy": null,
-      "lastWorkedOn": "2025-12-22T09:09:13.872929",
+      "lastWorkedOn": "2025-12-22T09:12:06.257819",
       "notes": "Implementation: Use react-markdown with remark-gfm for GFM support. Add rehype-highlight for code syntax highlighting. Create isMarkdown(text) heuristic in utils/markdown.ts checking for: headings (#), code fences (```), bullet lists (- or *), numbered lists, bold/italic markers. Edge cases: Mixed content with partial markdown, very long code blocks (add scroll), nested formatting. Dependencies: None - new feature. Context: AI chatbot outputs (Claude, ChatGPT, etc.) use markdown extensively - this makes shared responses readable. Gotchas: Sanitize HTML in markdown to prevent XSS. Ensure dark theme compatible styling. Code blocks need horizontal scroll on mobile."
     }
   ],

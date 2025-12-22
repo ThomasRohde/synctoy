@@ -9,3 +9,4 @@ export { EmptyState } from './EmptyState';
 export { AuthDialog } from './AuthDialog';
 export { UpdatePrompt } from './UpdatePrompt';
 export { ShareReceiver } from './ShareReceiver';
+export { MarkdownRenderer } from './MarkdownRenderer';

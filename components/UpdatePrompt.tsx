@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 interface UpdatePromptProps {
     needsRefresh: boolean;
@@ -16,13 +16,24 @@ export const UpdatePrompt: React.FC<UpdatePromptProps> = ({
     onUpdate,
     onDismiss,
 }) => {
+    // Auto-dismiss offline ready toast after 4 seconds (don't auto-dismiss update prompt)
+    useEffect(() => {
+        if (offlineReady && !needsRefresh) {
+            const timer = setTimeout(() => {
+                onDismiss();
+            }, 4000);
+            return () => clearTimeout(timer);
+        }
+        return undefined;
+    }, [offlineReady, needsRefresh, onDismiss]);
+
     // Don't show if there's nothing to display
     if (!needsRefresh && !offlineReady) {
         return null;
     }
 
     return (
-        <div className="fixed top-4 left-4 right-4 z-50 flex justify-center pointer-events-none">
+        <div className="fixed left-4 right-4 z-50 flex justify-center pointer-events-none" style={{ top: 'calc(env(safe-area-inset-top, 0px) + 16px)' }}>
             <div className="bg-slate-800 border border-slate-600 rounded-xl shadow-2xl p-4 max-w-sm w-full pointer-events-auto animate-slide-down">
                 {needsRefresh ? (
                     <>

@@ -145,17 +145,8 @@ export function Inbox() {
                 )}
 
                 <div className="max-w-2xl mx-auto">
-                    {/* Filter tabs */}
-                    <div className="py-4 sticky top-[var(--nav-height)] z-10 bg-background-dark">
-                        <FilterTabs
-                            value={inboxFilter}
-                            onChange={setInboxFilter}
-                            counts={counts}
-                        />
-                    </div>
-
                     {/* Search box */}
-                    <div className="pb-4">
+                    <div className="pt-4 pb-2">
                         <div className="relative">
                             <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-text-secondary text-xl">
                                 search
@@ -179,6 +170,15 @@ export function Inbox() {
                                 </button>
                             )}
                         </div>
+                    </div>
+
+                    {/* Filter tabs */}
+                    <div className="pb-4">
+                        <FilterTabs
+                            value={inboxFilter}
+                            onChange={setInboxFilter}
+                            counts={counts}
+                        />
                     </div>
 
                     {/* Content */}

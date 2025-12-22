@@ -811,11 +811,17 @@
         "Text in cards can still be selected when appropriate"
       ],
       "estimatedEffort": null,
-      "status": "in-progress",
-      "passes": false,
-      "verifiedAt": null,
-      "verifiedBy": null,
-      "evidenceLinks": [],
+      "status": "verified",
+      "passes": true,
+      "verifiedAt": "2025-12-22T07:03:33.837180",
+      "verifiedBy": "coding-agent",
+      "evidenceLinks": [
+        "Added CSS rules to prevent iOS context menu: -webkit-touch-callout: none and user-select: none on buttons",
+        "images",
+        "icons. Added touch-action: manipulation to prevent double-tap zoom delay. Explicitly preserved text selection in content areas (p",
+        "pre",
+        "code). Long-press on buttons/icons no longer shows Safari context menu. Text content remains selectable. Build successful. Creates native app feel on iOS while maintaining accessibility."
+      ],
       "blockedBy": null,
       "lastWorkedOn": "2025-12-22T06:59:18.914423",
       "notes": "Implementation: Apply CSS -webkit-touch-callout: none and user-select: none to buttons and nav elements. For links that should open URLs, consider custom long-press handler showing action sheet with Open/Copy options. Add touch-action: manipulation to prevent double-tap zoom delay. Apply selectively - don't disable on text content users might want to copy. Edge cases: The text content preview in HandoffItemCard should remain selectable. Links in content might need special handling. Dependencies: None. Context: Native apps don't show the Safari link preview/context menu. Gotchas: Be careful not to break accessibility - screen readers should still work."
@@ -823,8 +829,8 @@
   ],
   "metadata": {
     "createdAt": "2025-12-22T03:40:28.896801",
-    "lastUpdated": "2025-12-22T06:59:08.052115",
+    "lastUpdated": "2025-12-22T07:03:33.837191",
     "totalFeatures": 30,
-    "passingFeatures": 29
+    "passingFeatures": 30
   }
 }

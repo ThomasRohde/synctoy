@@ -29,11 +29,11 @@ export function useServiceWorker(): ServiceWorkerState {
                 setOfflineReady(true);
             },
             onRegisteredSW(swUrl, registration) {
-                // Check for updates periodically (every 60 seconds)
+                // Check for updates periodically (every 30 seconds)
                 if (registration) {
                     setInterval(() => {
                         registration.update();
-                    }, 60 * 1000);
+                    }, 30 * 1000);
                 }
                 console.info('[SW] Registered:', swUrl);
             },

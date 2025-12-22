@@ -102,4 +102,5 @@ export interface SharePayload {
     title?: string;
     category?: DeviceCategory;
     sensitive?: boolean;
+    autoSend?: boolean;
 }

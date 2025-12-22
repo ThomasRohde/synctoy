@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { useApp, useNotification, useDb } from '../context';
 import { useClipboard } from '../hooks';
 import { Header, CategorySelector, LoadingSpinner } from '../components';
@@ -29,6 +29,12 @@ export function Composer() {
     const [isSending, setIsSending] = useState(false);
     const [contentKind, setContentKind] = useState<'url' | 'text'>('url');
 
+    // Track if we've already triggered auto-send for this payload
+    const [autoSendTriggered, setAutoSendTriggered] = useState(false);
+    
+    // Ref to track auto-send to avoid stale closure issues
+    const autoSendRef = useRef(false);
+
     // Handle share payload from external source
     useEffect(() => {
         if (sharePayload) {
@@ -39,7 +45,9 @@ export function Composer() {
             if (sharePayload.sensitive) {
                 setIsSensitive(true);
             }
-            // Don't clear yet - let user confirm
+            // Reset auto-send trigger for new payload
+            setAutoSendTriggered(false);
+            autoSendRef.current = false;
         }
     }, [sharePayload]);
 
@@ -62,21 +70,24 @@ export function Composer() {
         }
     };
 
-    const handleSend = async () => {
+    const handleSend = useCallback(async () => {
         // Validate content
         if (!content.trim()) {
             notify.error('Please enter content to send');
             return;
         }
 
+        const kind = detectContentKind(content);
+        const workModeViolation = deviceProfile.workMode && kind === 'text' && content.trim();
+
         // Check work mode
-        if (isWorkModeViolation) {
+        if (workModeViolation) {
             notify.error('Work Mode is enabled. Only URLs are allowed.');
             return;
         }
 
         // Validate URL if detected as URL
-        if (contentKind === 'url' && !isValidUrl(content.trim())) {
+        if (kind === 'url' && !isValidUrl(content.trim())) {
             notify.error('Please enter a valid URL (starting with http:// or https://)');
             return;
         }
@@ -100,7 +111,7 @@ export function Composer() {
         setIsSending(true);
 
         try {
-            const plainContent: PlainContent = contentKind === 'url'
+            const plainContent: PlainContent = kind === 'url'
                 ? { url: content.trim() }
                 : { text: content.trim() };
 
@@ -117,7 +128,7 @@ export function Composer() {
             }
 
             // Generate preview
-            const preview = contentKind === 'url'
+            const preview = kind === 'url'
                 ? getUrlPreview(content.trim())
                 : getTextPreview(content.trim());
 
@@ -127,7 +138,7 @@ export function Composer() {
                 senderDeviceName: deviceProfile.deviceName,
                 senderCategory: deviceProfile.category,
                 targetCategory,
-                kind: contentKind,
+                kind,
                 status: 'new',
                 isSensitive,
                 content: itemContent,
@@ -153,7 +164,48 @@ export function Composer() {
         } finally {
             setIsSending(false);
         }
-    };
+    }, [
+        content, 
+        isSensitive, 
+        passphrase, 
+        confirmPassphrase, 
+        targetCategory, 
+        deviceProfile, 
+        sharePayload?.title,
+        db, 
+        notify, 
+        navigate, 
+        clearSharePayload, 
+        refreshItems, 
+        setSessionPassphrase
+    ]);
+
+    // Auto-send when sharePayload has autoSend=true (non-sensitive only)
+    useEffect(() => {
+        if (
+            sharePayload?.autoSend &&
+            !sharePayload.sensitive &&
+            content.trim() &&
+            !autoSendTriggered &&
+            !autoSendRef.current &&
+            !isSending
+        ) {
+            // Check if content is valid before auto-sending
+            const kind = detectContentKind(content);
+            const isWorkViolation = deviceProfile.workMode && kind === 'text';
+            const isInvalidUrl = kind === 'url' && !isValidUrl(content.trim());
+            
+            if (!isWorkViolation && !isInvalidUrl) {
+                setAutoSendTriggered(true);
+                autoSendRef.current = true;
+                // Small delay to let UI render first
+                const timer = setTimeout(() => {
+                    handleSend();
+                }, 100);
+                return () => clearTimeout(timer);
+            }
+        }
+    }, [sharePayload, content, autoSendTriggered, isSending, deviceProfile.workMode, handleSend]);
 
     return (
         <div className="min-h-[var(--app-vh)] bg-background-dark">

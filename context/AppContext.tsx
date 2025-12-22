@@ -86,6 +86,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
                             title: params.title,
                             category: params.category as DeviceProfile['category'],
                             sensitive: params.sensitive,
+                            autoSend: params.autoSend,
                         });
                         setRoute('send');
                     }

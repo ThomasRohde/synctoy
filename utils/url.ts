@@ -39,13 +39,18 @@ export function parseShareParams(search: string): {
     title?: string;
     category?: string;
     sensitive?: boolean;
+    autoSend?: boolean;
 } {
     const params = new URLSearchParams(search);
+    // Auto-send by default when coming from share links (unless explicitly disabled)
+    const hasAutoSendParam = params.has('autoSend');
+    const autoSend = hasAutoSendParam ? params.get('autoSend') !== 'false' : true;
     return {
         content: params.get('content') ?? params.get('url') ?? params.get('text') ?? undefined,
         title: params.get('title') ?? undefined,
         category: params.get('category') ?? undefined,
         sensitive: params.get('sensitive') === 'true',
+        autoSend,
     };
 }
 

@@ -128,15 +128,23 @@ class HandoffDatabase extends Dexie {
     }
 
     // Add a new handoff item
-    // Note: When using @id, Dexie Cloud generates the ID automatically
+    // Note: When using @id with cloud sync, Dexie Cloud generates the ID
+    // When offline or local-only, we provide our own UUID
     async addItem(item: Omit<HandoffItem, 'id' | 'createdAt' | 'updatedAt'>): Promise<string> {
         const now = Date.now();
-        const newItem = {
+        const newItem: Partial<HandoffItem> = {
             ...item,
             createdAt: now,
             updatedAt: now,
         };
-        // Dexie Cloud will generate the ID when using @id schema
+        
+        // If cloud is not enabled or not connected, provide our own ID
+        // Dexie Cloud will use it if provided, or generate one if not
+        if (!this.isCloudEnabled) {
+            newItem.id = crypto.randomUUID();
+        }
+        
+        // Dexie Cloud will generate the ID when using @id schema if not provided
         const id = await this.handoffItems.add(newItem as HandoffItem);
 
         // Record sender in known devices

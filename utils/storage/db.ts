@@ -4,6 +4,8 @@ import type { HandoffItem, DeviceProfile, PersistedStateRecord, KnownDevice } fr
 
 // Cloud URL storage key in localStorage (must be accessible synchronously before DB opens)
 const CLOUD_URL_STORAGE_KEY = 'handoff-lite-cloud-url';
+const DEVICE_ID_STORAGE_KEY = 'handoff-lite-device-id';
+const SETUP_COMPLETE_STORAGE_KEY = 'handoff-lite-setup-complete';
 
 // Get cloud URL from localStorage (synchronous, available before DB opens)
 function getStoredCloudUrl(): string | undefined {
@@ -28,21 +30,57 @@ function setStoredCloudUrl(url: string | undefined): void {
     }
 }
 
+// Get device ID from localStorage (critical: must not sync across devices!)
+function getStoredDeviceId(): string {
+    try {
+        let id = localStorage.getItem(DEVICE_ID_STORAGE_KEY);
+        if (!id) {
+            id = crypto.randomUUID();
+            localStorage.setItem(DEVICE_ID_STORAGE_KEY, id);
+        }
+        return id;
+    } catch {
+        return crypto.randomUUID();
+    }
+}
+
+// Check if setup is complete from localStorage
+function getSetupComplete(): boolean {
+    try {
+        return localStorage.getItem(SETUP_COMPLETE_STORAGE_KEY) === 'true';
+    } catch {
+        return false;
+    }
+}
+
+// Save setup complete to localStorage
+function setSetupComplete(complete: boolean): void {
+    try {
+        if (complete) {
+            localStorage.setItem(SETUP_COMPLETE_STORAGE_KEY, 'true');
+        } else {
+            localStorage.removeItem(SETUP_COMPLETE_STORAGE_KEY);
+        }
+    } catch {
+        // Ignore storage errors
+    }
+}
+
 // Cloud configuration - check localStorage first, then env var
 const INITIAL_CLOUD_URL = getStoredCloudUrl() || (import.meta.env.VITE_DEXIE_CLOUD_URL as string | undefined);
 
-// Default device profile
+// Default device profile - uses localStorage for critical values that must persist
 export const DEFAULT_DEVICE_PROFILE: DeviceProfile = {
-    deviceId: '',
+    deviceId: getStoredDeviceId(), // From localStorage, never synced!
     deviceName: '',
     category: 'any',
     workMode: false,
     retentionDays: 7,
     defaultTargetCategory: 'any',
     rememberPassphrase: 'off',
-    isSetupComplete: false,
+    isSetupComplete: getSetupComplete(), // From localStorage
     enableBrowserNotifications: false,
-    cloudUrl: INITIAL_CLOUD_URL, // Use stored or env var as default
+    cloudUrl: INITIAL_CLOUD_URL, // From localStorage
 };
 
 // Type for cloud-enabled database
@@ -128,6 +166,12 @@ class HandoffDatabase extends Dexie {
 
     // Helper to save device profile
     async saveDeviceProfile(profile: DeviceProfile): Promise<void> {
+        // Also persist critical values to localStorage for reliability
+        setSetupComplete(profile.isSetupComplete);
+        if (profile.cloudUrl !== undefined) {
+            setStoredCloudUrl(profile.cloudUrl);
+        }
+        
         await this.persistedState.put({
             key: 'deviceProfile',
             value: profile,
@@ -138,13 +182,14 @@ class HandoffDatabase extends Dexie {
     // Initialize device with unique ID if not set
     async initializeDevice(): Promise<DeviceProfile> {
         let profile = await this.getDeviceProfile();
-        if (!profile.deviceId) {
-            profile = {
-                ...profile,
-                deviceId: crypto.randomUUID(),
-            };
-            await this.saveDeviceProfile(profile);
+        // Device ID comes from localStorage, never changes
+        profile.deviceId = getStoredDeviceId();
+        // Also ensure isSetupComplete is in sync with localStorage
+        profile.isSetupComplete = getSetupComplete() || profile.isSetupComplete;
+        if (profile.isSetupComplete) {
+            setSetupComplete(true); // Sync to localStorage if not already
         }
+        await this.saveDeviceProfile(profile);
         return profile;
     }
 

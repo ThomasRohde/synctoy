@@ -1,151 +1,192 @@
 # iOS Shortcut Setup for Handoff Lite
 
-This guide explains how to create an iOS Shortcut that integrates Handoff Lite with the iOS Share Sheet, allowing you to send URLs and text from any app directly to your inbox.
+This guide explains how to create an iOS Shortcut that integrates Handoff Lite with the iOS Share Sheet, allowing you to send URLs and text from any app directly to your inbox with **one-tap auto-send**.
 
 ## Prerequisites
 
 - iOS 13 or later
 - Shortcuts app installed (pre-installed on iOS 13+)
-- Handoff Lite app accessible via browser or installed as PWA
+- Handoff Lite accessible at `https://thomasrohde.github.io/synctoy/` (or your own deployment)
+
+## Deep Link Format
+
+Handoff Lite uses query parameters for share links:
+
+```
+https://thomasrohde.github.io/synctoy/?handoff=1&nonce=...&kind=url&target=...
+```
+
+### Parameters
+
+| Parameter | Required | Description |
+|-----------|----------|-------------|
+| `handoff` | Yes | Must be `1` to trigger share receiver |
+| `nonce` | Yes | Unique ID (6-128 chars) for duplicate prevention |
+| `kind` | No | `url` or `text` (auto-detected if omitted) |
+| `target` | For URLs | The URL to share (URL-encoded) |
+| `text` | For text | The text content (URL-encoded) |
+| `title` | No | Optional title for the item |
+| `targetCategory` | No | `work`, `private`, or `any` (default: `any`) |
+| `source` | No | Source app name (e.g., `ChatGPT%20iOS`) |
+| `open` | No | Set to `inbox` to navigate there after sending |
 
 ## Creating the Shortcut
 
-### Method 1: Import Pre-built Shortcut (Recommended)
-
-1. **Download the shortcut template**:
-   - Open Safari on your iPhone
-   - Navigate to: [Download Handoff Lite Shortcut](#creating-your-own-shortcut)
-   - Tap "Get Shortcut"
-   - Review the actions and tap "Add Shortcut"
-
-2. **Configure the shortcut**:
-   - Open the Shortcuts app
-   - Find "Send to Handoff Lite"
-   - Tap the ⋯ menu
-   - Update the base URL to match your deployment:
-     - Local: `http://localhost:5173`
-     - Production: `https://your-domain.com`
-
-### Method 2: Create Your Own Shortcut
+### Step-by-Step Instructions
 
 1. **Open the Shortcuts app** on your iPhone
 
 2. **Create a new shortcut**:
-   - Tap the "+" button
+   - Tap the "+" button in the top right
    - Tap "Add Action"
 
-3. **Add the following actions**:
+3. **Configure Share Sheet input**:
+   - Search for "Receive" and add **"Receive [Any Input] from [Share Sheet]"**
+   - Tap on "Any" and select: URLs, Text, Safari web pages
 
-   **Action 1: Receive input**
-   - Search for "Receive" and add "Receive [Any Input] from [Share Sheet]"
-   - This accepts content from the share sheet
+4. **Generate a unique nonce**:
+   - Add **"Random Number"** action
+   - Set minimum: `100000000000`
+   - Set maximum: `999999999999`
+   - Add **"Format Date"** action (Current Date, format: `yyyyMMddHHmmss`)
+   - Add **"Text"** action with: `[Random Number][Formatted Date]`
+   - This creates a unique nonce like `12345678901220251222143025`
 
-   **Action 2: Get Type**
-   - Search for "Get Type" and add "Get Type of [Shortcut Input]"
-   - This determines if the shared content is a URL or text
+5. **Detect content type and build URL**:
+   - Add **"Get URLs from [Shortcut Input]"**
+   - Add **"Count"** action to count URLs
+   
+   - Add **"If [Count] is greater than 0"**:
+     - Add **"Get URLs from [Shortcut Input]"** → gets the first URL
+     - Add **"URL Encode [URLs]"** (Encode Mode: Form)
+     - Add **"Text"**:
+       ```
+       https://thomasrohde.github.io/synctoy/?handoff=1&nonce=[Nonce Text]&kind=url&target=[Encoded URL]&open=inbox&source=iOS%20Shortcut
+       ```
+   
+   - Add **"Otherwise"**:
+     - Add **"URL Encode [Shortcut Input]"** (Encode Mode: Form)
+     - Add **"Text"**:
+       ```
+       https://thomasrohde.github.io/synctoy/?handoff=1&nonce=[Nonce Text]&kind=text&text=[Encoded Text]&open=inbox&source=iOS%20Shortcut
+       ```
+   
+   - Add **"End If"**
 
-   **Action 3: If (URL Check)**
-   - Add "If [Type] is [URL]"
+6. **Open the deep link**:
+   - Add **"Open URLs"** action with the Text output from the If/Otherwise
 
-   **Action 4a: Get URL from input**
-   - Add "Get URLs from [Shortcut Input]"
+7. **Configure shortcut settings**:
+   - Tap the shortcut name at the top and rename to **"Send to Handoff"**
+   - Tap the dropdown arrow next to the name
+   - Enable **"Show in Share Sheet"**
+   - Optionally customize the icon (blue arrow recommended)
 
-   **Action 4b: URL encode**
-   - Add "URL Encode [URLs]"
-   - Set encoding to "Form"
+## Simplified Shortcut (URL Only)
 
-   **Action 5: Open URL (for URLs)**
-   - Add "Open URLs"
-   - Set URL to: `https://your-domain.com/#/share?url=[URL Encoded Value]`
-   - Replace `your-domain.com` with your actual deployment URL
+If you primarily share URLs, here's a simpler version:
 
-   **Action 6: Otherwise**
-   - Add "Otherwise"
-
-   **Action 7: URL encode text**
-   - Add "URL Encode [Shortcut Input]"
-   - Set encoding to "Form"
-
-   **Action 8: Open URL (for text)**
-   - Add "Open URLs"
-   - Set URL to: `https://your-domain.com/#/share?text=[URL Encoded Value]`
-
-   **Action 9: End If**
-   - Add "End If"
-
-4. **Configure shortcut settings**:
-   - Tap the shortcut name and rename it to "Send to Handoff Lite"
-   - Tap the icon to customize the appearance (optional)
-   - Enable "Show in Share Sheet"
-   - Select which content types to accept:
-     - ✅ URLs
-     - ✅ Text
-     - ✅ Safari web pages
+1. **Receive** [URLs] from [Share Sheet]
+2. **Random Number** (min: 100000000000, max: 999999999999)
+3. **URL Encode** [Shortcut Input] (Form mode)
+4. **Text**: `https://thomasrohde.github.io/synctoy/?handoff=1&nonce=[Random Number]&kind=url&target=[Encoded Value]&open=inbox`
+5. **Open URLs** [Text]
 
 ## Using the Shortcut
 
-1. **From any app**, select content (URL, text, or web page)
-2. **Tap the Share button** (square with arrow)
-3. **Scroll down** and tap "Send to Handoff Lite"
-4. **Handoff Lite will open** with the share composer pre-filled
-5. **Select target device** and tap "Send"
+1. **From any app** (Safari, ChatGPT, Notes, Mail, etc.), find content to share
+2. **Tap the Share button** (square with arrow pointing up)
+3. **Scroll down** to the shortcuts section and tap **"Send to Handoff"**
+4. **Handoff Lite opens** and automatically sends the content
+5. **A toast notification** confirms "Sent to Handoff"
+6. **Content syncs** to all your devices via Dexie Cloud
 
-## Example Shortcut Flow
+## Example Flow
 
 ```
-Input: "https://example.com/article"
+You're in ChatGPT iOS, copy a response URL
 ↓
-Get Type → URL
+Tap Share → "Send to Handoff"
 ↓
-URL Encode → "https%3A%2F%2Fexample.com%2Farticle"
+Shortcut generates: 
+https://thomasrohde.github.io/synctoy/?handoff=1&nonce=547821098712202512221430&kind=url&target=https%3A%2F%2Fchat.openai.com%2Fc%2Fabc123&open=inbox&source=iOS%20Shortcut
 ↓
-Open URL → "https://handoff.app/#/share?url=https%3A%2F%2Fexample.com%2Farticle"
+Handoff Lite opens, processes the link, shows "Sent to Handoff"
 ↓
-Handoff Lite opens with URL pre-filled in composer
+Item appears in Inbox, syncs to your other devices
 ```
+
+## Advanced: Category-Specific Shortcuts
+
+Create separate shortcuts for different device categories:
+
+**"Send to Handoff (Work)"**:
+```
+...&targetCategory=work&...
+```
+
+**"Send to Handoff (Private)"**:
+```
+...&targetCategory=private&...
+```
+
+This pre-selects the target category, useful for separating work and personal items.
 
 ## Troubleshooting
 
 ### Shortcut doesn't appear in Share Sheet
-- Go to Settings → Shortcuts
-- Ensure "Allow Running Scripts" is enabled
-- Reopen the Shortcuts app and verify "Show in Share Sheet" is enabled
+- Go to **Settings → Shortcuts**
+- Ensure **"Allow Running Scripts"** is enabled
+- In the shortcut editor, verify **"Show in Share Sheet"** is enabled
 
-### URL encoding issues
-- Ensure you're using "Form" encoding mode
-- iOS Shortcuts may have length limits for very long URLs (>2000 characters)
+### "Nothing to send" error
+- Ensure the `nonce` is at least 6 characters long
+- For URLs, verify the `target` parameter contains a valid http/https URL
+- For text, ensure the `text` parameter is not empty
+
+### Duplicate items appearing
+- This shouldn't happen - the nonce prevents duplicates
+- If it does, clear `synctoy_share_nonces` from localStorage
 
 ### Shortcut opens Safari instead of PWA
-- If you've installed Handoff Lite as a PWA, iOS should automatically detect and open the PWA
-- You may need to "Add to Home Screen" first for seamless integration
+- iOS doesn't reliably redirect to PWAs for query-param URLs
+- The share will still work - Safari opens Handoff Lite and processes it
+- For best experience, bookmark the app or keep it open
 
-### Permission prompts
-- First time you run the shortcut, iOS may ask for permission to access the URL
-- Tap "Allow" to proceed
+### URL too long
+- iOS has ~2000 character URL limits
+- Very long text content may be truncated
+- For large content, copy/paste directly in the Handoff Lite app
 
-## Advanced: Shortcut for Specific Device Categories
-
-You can create multiple shortcuts for different device categories:
-
-**Work Device Shortcut**:
-```
-Open URL: https://your-domain.com/#/share?url=[URL]&target=work
-```
-
-**Private Device Shortcut**:
-```
-Open URL: https://your-domain.com/#/share?url=[URL]&target=private
-```
-
-This pre-selects the target category when opening the composer.
+### Content doesn't sync
+- Ensure Dexie Cloud is configured in Settings
+- Check that you're logged in on both devices
+- Pull-to-refresh in the Inbox to force sync
 
 ## Security Note
 
-When sharing sensitive content, consider using the "Encrypt" option in the composer to protect your data with AES-256-GCM encryption.
+Content shared via Shortcut is passed through the URL, which may appear in browser history. For sensitive content:
+- Use the Handoff Lite app directly with Sensitive Mode enabled
+- Shortcut-based encryption is not supported (passphrases can't be securely handled)
+
+## Test Links
+
+Test the share receiver manually:
+
+**URL test:**
+```
+https://thomasrohde.github.io/synctoy/?handoff=1&nonce=test123456789&kind=url&target=https://example.com&title=Test%20Link&open=inbox
+```
+
+**Text test:**
+```
+https://thomasrohde.github.io/synctoy/?handoff=1&nonce=test987654321&kind=text&text=Hello%20from%20test&open=inbox
+```
 
 ## Need Help?
 
 If you encounter issues:
-1. Verify your deployment URL is correct and accessible
-2. Check that F008 (Share Route) is implemented in your Handoff Lite instance
-3. Test the share URL manually by visiting: `https://your-domain.com/#/share?text=test`
+1. Verify the base URL is correct for your deployment
+2. Test the deep link format manually in Safari
+3. Check browser console for `[ShareReceiver]` log messages
+4. Ensure you have a fresh nonce for each share attempt

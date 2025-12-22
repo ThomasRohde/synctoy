@@ -24,6 +24,7 @@ klondike feature list  # List all features
 ### Current Priority Features
 | ID | Description | Status |
 |----|-------------|--------|
+| F023 | GitHub Actions CI/CD - automated build and deploy to GitHub Pages with PWA support | 🔄 In progress |
 
 ---
 

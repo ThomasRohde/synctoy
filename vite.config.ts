@@ -4,8 +4,11 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { VitePWA } from 'vite-plugin-pwa';
 
+// Use '/synctoy/' for GitHub Pages, '/' for local development
+const base = process.env.GITHUB_ACTIONS ? '/synctoy/' : '/';
+
 export default defineConfig({
-    base: '/',
+    base,
     server: {
         port: 5000,
         host: '0.0.0.0',
@@ -26,8 +29,8 @@ export default defineConfig({
                 background_color: '#0f172a',
                 display: 'standalone',
                 orientation: 'any',
-                start_url: '/',
-                scope: '/',
+                start_url: './',
+                scope: './',
                 icons: [
                     {
                         src: 'icon-192.png',

@@ -596,12 +596,34 @@
       "blockedBy": null,
       "lastWorkedOn": "2025-12-22T05:06:24.426133",
       "notes": "Implementation: Observe db.cloud.userInteraction using useObservable from dexie-react-hooks. Create LoginDialog component that handles ui.type of 'email', 'otp', 'message-alert', 'logout-confirmation'. Set customLoginGui: true in cloud.configure() to use custom UI instead of default. Display current user from db.cloud.currentUser observable in Settings. Edge cases: User closes dialog mid-flow (call ui.onCancel), expired OTP (show error from ui.alerts), network failures. Dependencies: F021 (cloud URL config), F006 (cloud sync). Context: Current requireAuth: false gives anonymous access but users can't identify across devices. Gotchas: The userInteraction observable must be subscribed at app root level to catch auth prompts anytime. Use styled-components or tailwind for glass-card themed dialogs."
+    },
+    {
+      "id": "F023",
+      "category": "infrastructure",
+      "priority": 1,
+      "description": "GitHub Actions CI/CD - automated build and deploy to GitHub Pages with PWA support",
+      "dependencies": [],
+      "acceptanceCriteria": [
+        "GitHub Actions workflow builds project successfully",
+        "Vite base URL configured for GitHub Pages subdirectory",
+        "Static assets deploy to gh-pages",
+        "PWA manifest and service worker functional after deploy"
+      ],
+      "estimatedEffort": null,
+      "status": "in-progress",
+      "passes": false,
+      "verifiedAt": null,
+      "verifiedBy": null,
+      "evidenceLinks": [],
+      "blockedBy": null,
+      "lastWorkedOn": "2025-12-22T05:34:53.491348",
+      "notes": "Implementation: Create .github/workflows/deploy.yml using actions/checkout, setup-node, and peaceiris/actions-gh-pages. Edge cases: Handle base URL for subdirectory deployment (/synctoy/). Dependencies: None (standalone). Context: Project published to github.com/ThomasRohde/synctoy. Gotchas: PWA scope and start_url must match base path; update vite.config.ts base setting."
     }
   ],
   "metadata": {
     "createdAt": "2025-12-22T03:40:28.896801",
-    "lastUpdated": "2025-12-22T05:09:45.088121",
-    "totalFeatures": 22,
+    "lastUpdated": "2025-12-22T05:34:03.700849",
+    "totalFeatures": 23,
     "passingFeatures": 22
   }
 }

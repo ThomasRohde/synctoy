@@ -109,6 +109,12 @@
       ".klondike/agent-progress.json",
       "agent-progress.md"
     ],
-    "priorityFeatures": []
+    "priorityFeatures": [
+      {
+        "id": "F023",
+        "description": "GitHub Actions CI/CD - automated build and deploy to GitHub Pages with PWA support",
+        "status": "in-progress"
+      }
+    ]
   }
 }

@@ -46,7 +46,10 @@ export function Header({ title, subtitle, showBack, onBack, actions, showSyncSta
     return (
         <header
             className="fixed top-0 left-0 right-0 z-50 glass-card border-b border-white/10"
-            style={{ height: 'var(--nav-height)' }}
+            style={{
+                height: 'var(--nav-height)',
+                paddingTop: 'env(safe-area-inset-top, 0px)'
+            }}
         >
             <div className="flex items-center justify-between h-full px-4 max-w-2xl mx-auto">
                 <div className="flex items-center gap-3">

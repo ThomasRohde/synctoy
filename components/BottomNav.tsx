@@ -19,7 +19,10 @@ export function BottomNav() {
     return (
         <nav
             className="fixed bottom-0 left-0 right-0 z-50 glass-card border-t border-white/10"
-            style={{ height: 'var(--bottom-nav-height)' }}
+            style={{
+                height: 'var(--bottom-nav-height)',
+                paddingBottom: 'env(safe-area-inset-bottom, 0px)'
+            }}
         >
             <div className="flex items-center justify-around h-full max-w-md mx-auto">
                 {NAV_ITEMS.map(item => {

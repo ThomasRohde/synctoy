@@ -6,8 +6,10 @@
 :root {
     --app-vh: 100vh;
     --app-vw: 100vw;
-    --nav-height: 64px;
-    --bottom-nav-height: 64px;
+    --safe-area-inset-top: env(safe-area-inset-top, 0px);
+    --safe-area-inset-bottom: env(safe-area-inset-bottom, 0px);
+    --nav-height: calc(64px + var(--safe-area-inset-top));
+    --bottom-nav-height: calc(64px + var(--safe-area-inset-bottom));
 }
 
 /* Prevent overscroll bounce on iOS */

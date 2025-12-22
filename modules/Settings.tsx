@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useApp, useNotification, useDb } from '../context';
 import { Header, CategorySelector } from '../components';
-import { useSyncState, type SyncStatus } from '../hooks';
+import { useSyncState, useCurrentUser, type SyncStatus } from '../hooks';
 import type { DeviceCategory } from '../types';
 
 // Helper to get sync status display info
@@ -42,6 +42,7 @@ export function Settings() {
     const notify = useNotification();
     const db = useDb();
     const syncState = useSyncState();
+    const currentUser = useCurrentUser();
     const [activeSection, setActiveSection] = useState('device');
     const [isClearingArchived, setIsClearingArchived] = useState(false);
     const [cloudUrlInput, setCloudUrlInput] = useState(deviceProfile.cloudUrl || '');
@@ -64,6 +65,24 @@ export function Settings() {
             notify.success(trimmedUrl ? 'Cloud sync URL updated' : 'Cloud sync disabled');
         } catch (error) {
             notify.error('Failed to update cloud URL');
+        }
+    };
+
+    const handleLogin = async () => {
+        try {
+            // Trigger login by attempting to sync
+            await db.cloud.sync({ wait: false });
+        } catch (error) {
+            notify.error('Failed to initiate login');
+        }
+    };
+
+    const handleLogout = async () => {
+        try {
+            await db.cloud.logout();
+            notify.success('Logged out successfully');
+        } catch (error) {
+            notify.error('Failed to logout');
         }
     };
 
@@ -367,6 +386,50 @@ export function Settings() {
                                         </button>
                                     )}
                                 </div>
+
+                                {deviceProfile.cloudUrl && (
+                                    <div className="glass-card rounded-xl p-4 space-y-4">
+                                        <h3 className="font-medium flex items-center gap-2">
+                                            <span className="material-symbols-outlined">person</span>
+                                            Authentication
+                                        </h3>
+                                        
+                                        {currentUser?.isLoggedIn ? (
+                                            <div className="space-y-3">
+                                                <div className="flex items-center gap-3 p-3 bg-green-500/10 rounded-lg border border-green-500/20">
+                                                    <span className="material-symbols-outlined text-green-400">check_circle</span>
+                                                    <div className="flex-1">
+                                                        <p className="font-medium text-green-300">Logged In</p>
+                                                        <p className="text-sm text-gray-400">{currentUser.email || currentUser.userId}</p>
+                                                    </div>
+                                                </div>
+                                                <button
+                                                    onClick={handleLogout}
+                                                    className="w-full px-4 py-2 bg-red-500/20 text-red-400 rounded-lg hover:bg-red-500/30 transition-colors"
+                                                >
+                                                    Logout
+                                                </button>
+                                            </div>
+                                        ) : (
+                                            <div className="space-y-3">
+                                                <div className="flex items-center gap-3 p-3 bg-yellow-500/10 rounded-lg border border-yellow-500/20">
+                                                    <span className="material-symbols-outlined text-yellow-400">warning</span>
+                                                    <p className="text-sm text-gray-300">Not logged in. Login to sync with user identity across devices.</p>
+                                                </div>
+                                                <button
+                                                    onClick={handleLogin}
+                                                    className="w-full px-4 py-2 bg-primary rounded-lg hover:bg-primary/80 transition-colors"
+                                                >
+                                                    Login with Email
+                                                </button>
+                                            </div>
+                                        )}
+                                        
+                                        <p className="text-xs text-gray-500">
+                                            Authentication allows you to sync items across devices using your email identity.
+                                        </p>
+                                    </div>
+                                )}
 
                                 <div className="glass-card rounded-xl p-4 space-y-4">
                                     <h3 className="font-medium flex items-center gap-2">

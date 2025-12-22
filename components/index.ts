@@ -6,3 +6,4 @@ export { FilterTabs } from './FilterTabs';
 export { CategorySelector } from './CategorySelector';
 export { LoadingSpinner } from './LoadingSpinner';
 export { EmptyState } from './EmptyState';
+export { AuthDialog } from './AuthDialog';

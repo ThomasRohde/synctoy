@@ -59,7 +59,8 @@ class HandoffDatabase extends Dexie {
         if (cloudUrl) {
             this.cloud.configure({
                 databaseUrl: cloudUrl,
-                requireAuth: false, // Allow anonymous/unauthenticated access
+                requireAuth: true, // Require user authentication for sync
+                customLoginGui: true, // Use custom login UI instead of default
                 tryUseServiceWorker: true, // Enable background sync via service worker
                 // Local-only tables that should not sync (device profile is device-specific)
                 unsyncedTables: ['persistedState'],

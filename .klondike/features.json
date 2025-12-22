@@ -586,13 +586,13 @@
         "Custom styled dialogs matching app glass-card theme"
       ],
       "estimatedEffort": null,
-      "status": "not-started",
+      "status": "in-progress",
       "passes": false,
       "verifiedAt": null,
       "verifiedBy": null,
       "evidenceLinks": [],
       "blockedBy": null,
-      "lastWorkedOn": null,
+      "lastWorkedOn": "2025-12-22T05:06:24.426133",
       "notes": "Implementation: Observe db.cloud.userInteraction using useObservable from dexie-react-hooks. Create LoginDialog component that handles ui.type of 'email', 'otp', 'message-alert', 'logout-confirmation'. Set customLoginGui: true in cloud.configure() to use custom UI instead of default. Display current user from db.cloud.currentUser observable in Settings. Edge cases: User closes dialog mid-flow (call ui.onCancel), expired OTP (show error from ui.alerts), network failures. Dependencies: F021 (cloud URL config), F006 (cloud sync). Context: Current requireAuth: false gives anonymous access but users can't identify across devices. Gotchas: The userInteraction observable must be subscribed at app root level to catch auth prompts anytime. Use styled-components or tailwind for glass-card themed dialogs."
     }
   ],

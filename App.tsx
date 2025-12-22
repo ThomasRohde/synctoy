@@ -5,9 +5,9 @@ import {
     AppProvider,
     useApp,
 } from './context';
-import { NotificationToast, BottomNav, LoadingSpinner } from './components';
+import { NotificationToast, BottomNav, LoadingSpinner, AuthDialog } from './components';
 import { Inbox, Composer, Settings, Setup } from './modules';
-import { useViewportCssVars, useBrowserNotifications } from './hooks';
+import { useViewportCssVars, useBrowserNotifications, useAuthInteraction } from './hooks';
 
 // Route renderer component
 function RouteRenderer() {
@@ -49,11 +49,13 @@ function RouteRenderer() {
 function AppContent() {
     useViewportCssVars();
     useBrowserNotifications();
+    const authInteraction = useAuthInteraction();
 
     return (
         <div className="min-h-[var(--app-vh)] bg-background-dark text-white">
             <RouteRenderer />
             <NotificationToast />
+            {authInteraction && <AuthDialog interaction={authInteraction} />}
         </div>
     );
 }

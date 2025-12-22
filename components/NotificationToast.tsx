@@ -1,10 +1,12 @@
+import { Info, CheckCircle, AlertTriangle, XCircle, X } from 'lucide-react';
 import { useNotificationContext } from '../context';
+import type { NotificationType } from '../types';
 
-const ICON_MAP = {
-    info: 'info',
-    success: 'check_circle',
-    warning: 'warning',
-    error: 'error',
+const ICON_MAP: Record<NotificationType, typeof Info> = {
+    info: Info,
+    success: CheckCircle,
+    warning: AlertTriangle,
+    error: XCircle,
 };
 
 const COLOR_MAP = {
@@ -33,16 +35,17 @@ export function NotificationToast() {
                     "
                 >
                     <div className={`w-8 h-8 rounded-full ${COLOR_MAP[notification.type]} flex items-center justify-center flex-shrink-0`}>
-                        <span className="material-symbols-outlined text-white text-lg">
-                            {ICON_MAP[notification.type]}
-                        </span>
+                        {(() => {
+                            const IconComponent = ICON_MAP[notification.type];
+                            return <IconComponent className="w-4 h-4 text-white" />;
+                        })()}
                     </div>
                     <span className="text-white text-sm flex-1">{notification.message}</span>
                     <button
                         onClick={() => removeNotification(notification.id)}
                         className="text-white/50 hover:text-white"
                     >
-                        <span className="material-symbols-outlined text-lg">close</span>
+                        <X className="w-4 h-4" />
                     </button>
                 </div>
             ))}

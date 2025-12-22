@@ -1,3 +1,4 @@
+import { CloudOff, CloudSync, CloudCheck, RotateCw, WifiOff, HelpCircle, ArrowLeft, LucideIcon } from 'lucide-react';
 import { useApp } from '../context';
 import { useSyncState, type SyncStatus } from '../hooks';
 
@@ -10,22 +11,24 @@ interface HeaderProps {
     showSyncStatus?: boolean;
 }
 
-function getSyncIndicator(status: SyncStatus): { color: string; icon: string; title: string } {
+function getSyncIndicator(status: SyncStatus): { color: string; icon: LucideIcon; title: string } {
     switch (status) {
         case 'local-only':
-            return { color: 'text-gray-500', icon: 'cloud_off', title: 'Local-only mode' };
+            return { color: 'text-gray-500', icon: CloudOff, title: 'Local-only mode' };
         case 'connecting':
-            return { color: 'text-yellow-400 animate-pulse', icon: 'cloud_sync', title: 'Connecting...' };
+            return { color: 'text-yellow-400 animate-pulse', icon: CloudSync, title: 'Connecting...' };
         case 'connected':
-            return { color: 'text-green-400', icon: 'cloud_done', title: 'Synced' };
+            return { color: 'text-green-400', icon: CloudCheck, title: 'Synced' };
         case 'syncing':
-            return { color: 'text-blue-400 animate-pulse', icon: 'sync', title: 'Syncing...' };
+            return { color: 'text-blue-400 animate-pulse', icon: RotateCw, title: 'Syncing...' };
+        case 'offline':
+            return { color: 'text-amber-500', icon: WifiOff, title: 'Offline' };
         case 'disconnected':
-            return { color: 'text-orange-400', icon: 'cloud_off', title: 'Disconnected' };
+            return { color: 'text-orange-400', icon: CloudOff, title: 'Disconnected' };
         case 'error':
-            return { color: 'text-red-400', icon: 'cloud_off', title: 'Sync error' };
+            return { color: 'text-red-400', icon: CloudOff, title: 'Sync error' };
         default:
-            return { color: 'text-gray-500', icon: 'help', title: 'Unknown' };
+            return { color: 'text-gray-500', icon: HelpCircle, title: 'Unknown' };
     }
 }
 
@@ -42,6 +45,7 @@ export function Header({ title, subtitle, showBack, onBack, actions, showSyncSta
     };
 
     const syncIndicator = getSyncIndicator(syncState.status);
+    const SyncIcon = syncIndicator.icon;
 
     return (
         <header
@@ -58,7 +62,7 @@ export function Header({ title, subtitle, showBack, onBack, actions, showSyncSta
                             onClick={handleBack}
                             className="p-2.5 -ml-2 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-lg hover:bg-white/10 transition-colors"
                         >
-                            <span className="material-symbols-outlined">arrow_back</span>
+                            <ArrowLeft className="w-5 h-5" />
                         </button>
                     )}
                     <div>
@@ -70,12 +74,10 @@ export function Header({ title, subtitle, showBack, onBack, actions, showSyncSta
                 </div>
                 <div className="flex items-center gap-2">
                     {showSyncStatus && (
-                        <span
-                            className={`material-symbols-outlined text-xl ${syncIndicator.color}`}
+                        <SyncIcon
+                            className={`w-5 h-5 ${syncIndicator.color}`}
                             title={syncIndicator.title}
-                        >
-                            {syncIndicator.icon}
-                        </span>
+                        />
                     )}
                     {actions}
                 </div>

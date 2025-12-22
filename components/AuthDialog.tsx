@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Info, AlertTriangle, Mail, Hash } from 'lucide-react';
 
 interface AuthDialogProps {
     interaction: {
@@ -45,7 +46,7 @@ export function AuthDialog({ interaction }: AuthDialogProps) {
             <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
                 <div className="glass-card rounded-xl p-6 max-w-md w-full space-y-4">
                     <h2 className="text-xl font-bold flex items-center gap-2">
-                        <span className="material-symbols-outlined text-blue-400">info</span>
+                        <Info className="w-5 h-5 text-blue-400" />
                         {interaction.title || 'Message'}
                     </h2>
 
@@ -80,7 +81,7 @@ export function AuthDialog({ interaction }: AuthDialogProps) {
             <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
                 <div className="glass-card rounded-xl p-6 max-w-md w-full space-y-4">
                     <h2 className="text-xl font-bold flex items-center gap-2">
-                        <span className="material-symbols-outlined text-yellow-400">warning</span>
+                        <AlertTriangle className="w-5 h-5 text-yellow-400" />
                         {interaction.title || 'Confirm Logout'}
                     </h2>
 
@@ -122,9 +123,11 @@ export function AuthDialog({ interaction }: AuthDialogProps) {
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
             <form onSubmit={handleSubmit} className="glass-card rounded-xl p-6 max-w-md w-full space-y-4">
                 <h2 className="text-xl font-bold flex items-center gap-2">
-                    <span className="material-symbols-outlined text-primary">
-                        {interaction.type === 'email' ? 'mail' : 'pin'}
-                    </span>
+                    {interaction.type === 'email' ? (
+                        <Mail className="w-5 h-5 text-primary" />
+                    ) : (
+                        <Hash className="w-5 h-5 text-primary" />
+                    )}
                     {interaction.title || (interaction.type === 'email' ? 'Enter Email' : 'Enter OTP Code')}
                 </h2>
 

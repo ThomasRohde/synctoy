@@ -25,6 +25,7 @@ import {
     AlertCircle,
     Download,
     MonitorSmartphone,
+    ArrowLeftRight,
 } from 'lucide-react';
 import { useApp, useNotification, useDb } from '../context';
 import { Header, CategorySelector } from '../components';
@@ -485,7 +486,10 @@ export function Settings() {
                                                 ? 'animate-pulse'
                                                 : ''
                                         }`} />
-                                        <syncStatusInfo.icon className="w-5 h-5 text-gray-400" />
+                                        {(() => {
+                                            const SyncIcon = syncStatusInfo.icon;
+                                            return <SyncIcon className="w-5 h-5 text-gray-400" />;
+                                        })()}
                                         <span className="text-gray-300">{syncStatusInfo.label}</span>
                                     </div>
                                     {syncState.isCloudEnabled ? (

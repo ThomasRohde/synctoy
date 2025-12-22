@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Copy, Eye, Code } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import rehypeHighlight from 'rehype-highlight';
@@ -52,7 +53,7 @@ export function MarkdownRenderer({ content, className = '' }: MarkdownRendererPr
                             className="absolute top-2 right-2 p-1.5 bg-white/10 hover:bg-white/20 rounded opacity-0 group-hover:opacity-100 transition-opacity"
                             title="Copy code"
                         >
-                            <span className="material-symbols-outlined text-sm">content_copy</span>
+                            <Copy className="w-4 h-4" />
                         </button>
                     )}
                 </div>
@@ -170,9 +171,11 @@ export function MarkdownRenderer({ content, className = '' }: MarkdownRendererPr
                     className="flex items-center gap-1 px-2 py-1 text-xs bg-white/10 hover:bg-white/20 rounded transition-colors"
                     title={showRaw ? 'Show rendered' : 'Show source'}
                 >
-                    <span className="material-symbols-outlined text-sm">
-                        {showRaw ? 'visibility' : 'code'}
-                    </span>
+                    {showRaw ? (
+                        <Eye className="w-4 h-4" />
+                    ) : (
+                        <Code className="w-4 h-4" />
+                    )}
                     {showRaw ? 'Rendered' : 'Source'}
                 </button>
             </div>

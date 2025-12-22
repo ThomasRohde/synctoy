@@ -14,51 +14,52 @@ export function isMarkdown(text: string): boolean {
     let score = 0;
 
     // Check for code fences (```language or ```)
-    const codeFencePattern = /^```[\w-]*$/m;
+    const codeFencePattern = /```[\w-]*\n[\s\S]*?```/;
     if (codeFencePattern.test(text)) {
         score += 3; // Strong indicator
     }
 
-    // Check for headings (# Heading)
-    const headingPattern = /^#{1,6}\s+\S/m;
+    // Check for headings (# Heading) - must be at start of line
+    const headingPattern = /^#{1,6}\s+.+$/m;
     if (headingPattern.test(text)) {
         score += 2;
     }
 
-    // Check for bullet lists (- item or * item)
-    const bulletListPattern = /^[\s]*[-*+]\s+\S/m;
+    // Check for bullet lists (- item or * item at start of line)
+    const bulletListPattern = /^[\t ]*[-*+]\s+\S/m;
     if (bulletListPattern.test(text)) {
         score += 1;
     }
 
     // Check for numbered lists (1. item)
-    const numberedListPattern = /^[\s]*\d+\.\s+\S/m;
+    const numberedListPattern = /^[\t ]*\d+\.\s+\S/m;
     if (numberedListPattern.test(text)) {
         score += 1;
     }
 
     // Check for inline code (`code`)
-    const inlineCodePattern = /`[^`]+`/;
+    const inlineCodePattern = /`[^`\n]+`/;
     if (inlineCodePattern.test(text)) {
         score += 1;
     }
 
-    // Check for bold (**text** or __text__)
-    const boldPattern = /(\*\*|__)[^*_]+\1/;
+    // Check for bold (**text**) - more permissive pattern
+    const boldPattern = /\*\*[^*\n]+\*\*/;
     if (boldPattern.test(text)) {
-        score += 1;
+        score += 2; // Increased weight - common in chatbot output
     }
 
-    // Check for italic (*text* or _text_) - be careful not to match bullet lists
-    const italicPattern = /(?<!\*)\*(?!\*)([^*\n]+)\*(?!\*)|(?<!_)_(?!_)([^_\n]+)_(?!_)/;
+    // Check for italic (*text* or _text_) - single markers
+    // Avoid matching bullets or underscores in words
+    const italicPattern = /(?<![*\w])\*[^*\n]+\*(?![*\w])|(?<![_\w])_[^_\n]+_(?![_\w])/;
     if (italicPattern.test(text)) {
         score += 1;
     }
 
     // Check for links [text](url)
-    const linkPattern = /\[([^\]]+)\]\(([^)]+)\)/;
+    const linkPattern = /\[[^\]]+\]\([^)]+\)/;
     if (linkPattern.test(text)) {
-        score += 1;
+        score += 2;
     }
 
     // Check for blockquotes (> text)
@@ -68,14 +69,21 @@ export function isMarkdown(text: string): boolean {
     }
 
     // Check for horizontal rules (---, ***, ___)
-    const hrPattern = /^([-*_]){3,}$/m;
+    const hrPattern = /^[-*_]{3,}\s*$/m;
     if (hrPattern.test(text)) {
         score += 1;
     }
 
     // Check for tables (| col | col |)
-    const tablePattern = /\|[^|]+\|/;
+    const tablePattern = /^\|.+\|$/m;
     if (tablePattern.test(text)) {
+        score += 2;
+    }
+
+    // Check for definition-style bold headers (common in newsletters)
+    // Pattern: **Title** — or **Title** - at start of paragraph
+    const boldHeaderPattern = /^\*\*[^*]+\*\*\s*[—–-]/m;
+    if (boldHeaderPattern.test(text)) {
         score += 2;
     }
 

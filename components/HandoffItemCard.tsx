@@ -345,6 +345,7 @@ export function HandoffItemCard({ item, onStatusChange }: HandoffItemCardProps) 
                     )}
                 </div>
             </div>
+            </div>
         </div>
     );
 }

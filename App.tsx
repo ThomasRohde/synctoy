@@ -1,13 +1,13 @@
-import React, { Suspense } from 'react';
+import React, { Suspense, useState } from 'react';
 import {
     DbProvider,
     NotificationProvider,
     AppProvider,
     useApp,
 } from './context';
-import { NotificationToast, BottomNav, LoadingSpinner, AuthDialog } from './components';
+import { NotificationToast, BottomNav, LoadingSpinner, AuthDialog, UpdatePrompt } from './components';
 import { Inbox, Composer, Settings, Setup } from './modules';
-import { useViewportCssVars, useBrowserNotifications, useAuthInteraction } from './hooks';
+import { useViewportCssVars, useBrowserNotifications, useAuthInteraction, useServiceWorker } from './hooks';
 
 // Route renderer component
 function RouteRenderer() {
@@ -50,12 +50,22 @@ function AppContent() {
     useViewportCssVars();
     useBrowserNotifications();
     const authInteraction = useAuthInteraction();
+    const { needsRefresh, offlineReady, updateServiceWorker } = useServiceWorker();
+    const [showUpdatePrompt, setShowUpdatePrompt] = useState(true);
 
     return (
         <div className="min-h-[var(--app-vh)] bg-background-dark text-white">
             <RouteRenderer />
             <NotificationToast />
             {authInteraction && <AuthDialog interaction={authInteraction} />}
+            {showUpdatePrompt && (
+                <UpdatePrompt
+                    needsRefresh={needsRefresh}
+                    offlineReady={offlineReady}
+                    onUpdate={updateServiceWorker}
+                    onDismiss={() => setShowUpdatePrompt(false)}
+                />
+            )}
         </div>
     );
 }

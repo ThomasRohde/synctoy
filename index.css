@@ -155,6 +155,17 @@ select {
     }
 }
 
+@keyframes slideDown {
+    0% {
+        opacity: 0;
+        transform: translateY(-100%);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
 .animate-fade-in-up {
     animation: fadeInUp 0.2s ease-out;
 }
@@ -173,6 +184,10 @@ select {
 
 .animate-slide-in-up {
     animation: slideInUp 0.3s ease-out;
+}
+
+.animate-slide-down {
+    animation: slideDown 0.3s ease-out;
 }
 
 /* Material Icons adjustment */

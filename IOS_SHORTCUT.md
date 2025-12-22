@@ -132,6 +132,55 @@ Create separate shortcuts for different device categories:
 
 This pre-selects the target category, useful for separating work and personal items.
 
+## Reducing Confirmation Prompts
+
+iOS shows security prompts when shortcuts open URLs. Here's how to minimize them:
+
+### Enable Advanced Shortcuts Settings
+
+Go to **Settings → Shortcuts → Advanced** and enable:
+- ✅ **Allow Running Scripts**
+- ✅ **Allow Sharing Large Amounts of Data**  
+- ✅ **Allow Deleting Without Confirmation**
+
+This reduces some prompts and allows the shortcut to run more smoothly.
+
+### Run the Shortcut Multiple Times
+
+iOS learns to trust shortcuts over time. After running "Send to Handoff" 5-10 times, iOS may stop showing the "Allow opening URL?" confirmation.
+
+### Add Shortcut to Home Screen
+
+Shortcuts launched from the Home Screen sometimes have fewer prompts than those run from the Share Sheet:
+1. Open the Shortcuts app
+2. Long-press on "Send to Handoff"
+3. Tap **"Add to Home Screen"**
+4. Use this icon to trigger the shortcut directly
+
+### Alternative: Clipboard-Based Approach (Zero Prompts)
+
+For a prompt-free experience, use this alternative approach:
+
+1. **Receive** [Any Input] from [Share Sheet]
+2. **Random Number** + **Format Date** → create nonce
+3. **Build URL** (same as before)
+4. **Copy to Clipboard** [URL]
+5. **Show Notification**: "Copied! Tap to open Handoff"
+6. **Open App** → Safari (optional)
+
+This copies the deep link to clipboard instead of opening it directly. Then:
+- Open Safari and paste the URL, OR
+- Open Handoff Lite and it will detect the clipboard content
+
+### Why Prompts Exist
+
+The "Allow [shortcut] to open [URL]?" prompt is an iOS security feature that cannot be fully disabled. It protects users from malicious shortcuts that could:
+- Open phishing sites
+- Trigger unwanted downloads
+- Redirect to harmful content
+
+The prompts reduce with trust over time, but Apple prioritizes security over convenience here.
+
 ## Troubleshooting
 
 ### Shortcut doesn't appear in Share Sheet

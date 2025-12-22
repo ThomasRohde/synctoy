@@ -25,6 +25,12 @@ export function HandoffItemCard({ item, onStatusChange }: HandoffItemCardProps) 
     const isEncrypted = item.isSensitive && 'ciphertext' in item.content;
     const content = decryptedContent ?? (isEncrypted ? null : (item.content as PlainContent));
 
+    const handleArchive = async () => {
+        await db.updateItemStatus(item.id, 'archived');
+        onStatusChange?.();
+        notify.success('Archived');
+    };
+
     // Swipe-to-archive gesture
     const { swipeState, handlers } = useSwipeGesture({
         onSwipeLeft: () => {
@@ -122,12 +128,6 @@ export function HandoffItemCard({ item, onStatusChange }: HandoffItemCardProps) 
         await db.updateItemStatus(item.id, 'done');
         onStatusChange?.();
         notify.success('Marked as done');
-    };
-
-    const handleArchive = async () => {
-        await db.updateItemStatus(item.id, 'archived');
-        onStatusChange?.();
-        notify.success('Archived');
     };
 
     const handleUnarchive = async () => {

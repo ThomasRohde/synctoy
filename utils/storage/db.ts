@@ -37,16 +37,17 @@ class HandoffDatabase extends Dexie {
         // Always add dexie-cloud-addon (can be configured later)
         super('handoff-lite', { addons: [dexieCloud] });
 
-        // Note: Dexie Cloud requires string primary keys (not auto-increment)
-        // Using 'id' instead of '@id' keeps it compatible with local-only mode
+        // Note: Dexie Cloud requires @id for synced tables to generate cloud-compatible IDs
+        // Tables prefixed with $ are local-only and don't sync
         this.version(1).stores({
-            handoffItems: 'id, createdAt, status, targetCategory, kind, [status+createdAt]',
+            handoffItems: '@id, createdAt, status, targetCategory, kind, [status+createdAt]',
             persistedState: 'key',
         });
 
         // Version 2: Add knownDevices table and targetDeviceId index
+        // Note: knownDevices uses deviceId (not @deviceId) because we provide the ID ourselves
         this.version(2).stores({
-            handoffItems: 'id, createdAt, status, targetCategory, targetDeviceId, kind, [status+createdAt]',
+            handoffItems: '@id, createdAt, status, targetCategory, targetDeviceId, kind, [status+createdAt]',
             persistedState: 'key',
             knownDevices: 'deviceId, lastSeen',
         });
@@ -60,10 +61,12 @@ class HandoffDatabase extends Dexie {
             this.cloud.configure({
                 databaseUrl: cloudUrl,
                 requireAuth: true, // Require user authentication for sync
-                customLoginGui: true, // Use custom login UI instead of default
-                tryUseServiceWorker: true, // Enable background sync via service worker
-                // Local-only tables that should not sync (device profile is device-specific)
-                unsyncedTables: ['persistedState'],
+                customLoginGui: false, // Use Dexie's built-in login UI for better reliability
+                tryUseServiceWorker: false, // Disable service worker sync (can be problematic on some hosts)
+                // Local-only tables that should not sync
+                // - persistedState: device-specific settings
+                // - knownDevices: device registry with client-provided IDs (not cloud-generated)
+                unsyncedTables: ['persistedState', 'knownDevices'],
             });
             this.currentCloudUrl = cloudUrl;
         }
@@ -125,16 +128,16 @@ class HandoffDatabase extends Dexie {
     }
 
     // Add a new handoff item
+    // Note: When using @id, Dexie Cloud generates the ID automatically
     async addItem(item: Omit<HandoffItem, 'id' | 'createdAt' | 'updatedAt'>): Promise<string> {
         const now = Date.now();
-        const id = crypto.randomUUID();
-        const newItem: HandoffItem = {
+        const newItem = {
             ...item,
-            id,
             createdAt: now,
             updatedAt: now,
         };
-        await this.handoffItems.add(newItem);
+        // Dexie Cloud will generate the ID when using @id schema
+        const id = await this.handoffItems.add(newItem as HandoffItem);
 
         // Record sender in known devices
         await this.registerDevice({
@@ -144,7 +147,7 @@ class HandoffDatabase extends Dexie {
             lastSeen: now,
         });
 
-        return id;
+        return id as string;
     }
 
     // Update item status

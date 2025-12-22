@@ -3,7 +3,6 @@ import { useApp, useNotification, useDb } from '../context';
 import { Header, CategorySelector } from '../components';
 import { useSyncState, useCurrentUser, type SyncStatus } from '../hooks';
 import { cloudDb } from '../utils/storage/db';
-import type { DeviceCategory } from '../types';
 
 // Helper to get sync status display info
 function getSyncStatusInfo(status: SyncStatus): { color: string; label: string; icon: string } {
@@ -70,7 +69,7 @@ export function Settings() {
             setTimeout(() => {
                 window.location.reload();
             }, 1000);
-        } catch (error) {
+        } catch {
             notify.error('Failed to update cloud URL');
         }
     };
@@ -84,11 +83,12 @@ export function Settings() {
             }
             // Trigger login flow - this will prompt for email via userInteraction
             await cloudDb.cloud.login();
-        } catch (error: any) {
+        } catch (error: unknown) {
             console.error('Login error:', error);
             // Don't show error if user cancelled
-            if (error?.name !== 'AbortError') {
-                notify.error('Failed to initiate login: ' + (error?.message || 'Unknown error'));
+            const err = error as { name?: string; message?: string };
+            if (err.name !== 'AbortError') {
+                notify.error('Failed to initiate login: ' + (err.message || 'Unknown error'));
             }
         }
     };
@@ -97,9 +97,10 @@ export function Settings() {
         try {
             await cloudDb.cloud.logout();
             notify.success('Logged out successfully');
-        } catch (error: any) {
+        } catch (error: unknown) {
             console.error('Logout error:', error);
-            notify.error('Failed to logout: ' + (error?.message || 'Unknown error'));
+            const err = error as { message?: string };
+            notify.error('Failed to logout: ' + (err.message || 'Unknown error'));
         }
     };
 
@@ -112,7 +113,7 @@ export function Settings() {
         try {
             const count = await db.clearArchived();
             notify.success(`Cleared ${count} archived items`);
-        } catch (error) {
+        } catch {
             notify.error('Failed to clear archived items');
         } finally {
             setIsClearingArchived(false);
@@ -123,7 +124,7 @@ export function Settings() {
         try {
             const count = await db.runRetentionCleanup(deviceProfile.retentionDays);
             notify.success(`Archived ${count} old items`);
-        } catch (error) {
+        } catch {
             notify.error('Failed to run retention cleanup');
         }
     };

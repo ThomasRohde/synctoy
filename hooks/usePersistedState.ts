@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { db } from '../utils/storage/db';
 
 interface UsePersistedStateResult<T> {
@@ -10,7 +10,6 @@ interface UsePersistedStateResult<T> {
 export function usePersistedState<T>(key: string, defaultValue: T): UsePersistedStateResult<T> {
     const [value, setLocalValue] = useState<T>(defaultValue);
     const [isLoading, setIsLoading] = useState(true);
-    const defaultRef = useRef(defaultValue);
 
     // Load initial value
     useEffect(() => {

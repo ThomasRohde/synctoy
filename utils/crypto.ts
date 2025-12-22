@@ -1,7 +1,8 @@
 // AES-256-GCM encryption utilities using Web Crypto API
 // For Sensitive Mode as specified in PRD
 
-import type { CryptoParams, EncryptedContent, PlainContent } from '../types';
+import type { EncryptedContent, PlainContent } from '../types';
+export type { CryptoParams } from '../types';
 
 // PBKDF2 configuration
 const PBKDF2_ITERATIONS = 100000; // High iteration count for security

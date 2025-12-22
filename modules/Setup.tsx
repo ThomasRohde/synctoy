@@ -49,7 +49,7 @@ export function Setup() {
             setTimeout(() => {
                 navigate('inbox');
             }, 1500);
-        } catch (error) {
+        } catch {
             notify.error('Failed to save settings');
             setIsCompleting(false);
         }

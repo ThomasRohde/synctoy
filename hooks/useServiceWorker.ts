@@ -35,7 +35,7 @@ export function useServiceWorker(): ServiceWorkerState {
                         registration.update();
                     }, 60 * 1000);
                 }
-                console.log('[SW] Registered:', swUrl);
+                console.info('[SW] Registered:', swUrl);
             },
             onRegisterError(error) {
                 console.error('[SW] Registration error:', error);

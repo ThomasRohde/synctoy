@@ -51,9 +51,10 @@ export function useSyncState(): SyncState {
 
         // Subscribe to syncState observable
         const syncSubscription = cloudDb.cloud.syncState.subscribe({
-            next: (syncState: any) => {
+            next: (syncState: Record<string, unknown>) => {
                 let status: SyncStatus;
-                const error = syncState.error?.message || null;
+                const errorObj = syncState.error as { message?: string } | undefined;
+                const error = errorObj?.message || null;
 
                 // Check offline first
                 if (!isOnline || syncState.status === 'offline') {
@@ -77,18 +78,19 @@ export function useSyncState(): SyncState {
                     lastSyncTime: syncState.phase === 'in-sync' ? Date.now() : prev.lastSyncTime,
                 }));
             },
-            error: (err: any) => {
+            error: (err: unknown) => {
+                const errorObj = err as { message?: string } | undefined;
                 setState(prev => ({
                     ...prev,
                     status: 'error',
-                    error: err?.message || 'Connection error',
+                    error: errorObj?.message || 'Connection error',
                 }));
             },
         });
 
         // Also check current user to determine connection state
         const userSubscription = cloudDb.cloud.currentUser.subscribe({
-            next: (user: any) => {
+            next: (user: unknown) => {
                 if (user?.isLoggedIn) {
                     // User is logged in, we can consider ourselves connected
                     setState(prev => {

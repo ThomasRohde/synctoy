@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import type { UserLogin } from 'dexie-cloud-addon';
 
 interface AuthDialogProps {
     interaction: {

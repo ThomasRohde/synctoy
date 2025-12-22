@@ -4,7 +4,7 @@ import { useClipboard } from '../hooks';
 import { Header, CategorySelector, LoadingSpinner } from '../components';
 import { isValidUrl, detectContentKind, getUrlPreview, getTextPreview, haptics } from '../utils';
 import { encryptContent } from '../utils/crypto';
-import type { DeviceCategory, PlainContent } from '../types';
+import type { DeviceCategory, PlainContent, EncryptedContent } from '../types';
 
 export function Composer() {
     const {
@@ -13,7 +13,6 @@ export function Composer() {
         clearSharePayload,
         navigate,
         refreshItems,
-        sessionPassphrase,
         setSessionPassphrase,
     } = useApp();
     const notify = useNotification();
@@ -105,7 +104,7 @@ export function Composer() {
                 ? { url: content.trim() }
                 : { text: content.trim() };
 
-            let itemContent: any = plainContent;
+            let itemContent: PlainContent | EncryptedContent = plainContent;
 
             // Encrypt if sensitive
             if (isSensitive) {

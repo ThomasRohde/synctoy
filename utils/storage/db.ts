@@ -117,7 +117,7 @@ class HandoffDatabase extends Dexie {
         // Configure cloud sync with URL from localStorage (available synchronously)
         // This MUST happen before any database operations for @id to work properly
         if (INITIAL_CLOUD_URL) {
-            console.log('[db] Configuring Dexie Cloud with URL:', INITIAL_CLOUD_URL);
+            console.info('[db] Configuring Dexie Cloud with URL:', INITIAL_CLOUD_URL);
             this.cloud.configure({
                 databaseUrl: INITIAL_CLOUD_URL,
                 requireAuth: true,
@@ -126,7 +126,7 @@ class HandoffDatabase extends Dexie {
                 unsyncedTables: ['persistedState', 'knownDevices'],
             });
         } else {
-            console.log('[db] No cloud URL configured - running in local-only mode');
+            console.info('[db] No cloud URL configured - running in local-only mode');
         }
     }
 
@@ -142,7 +142,7 @@ class HandoffDatabase extends Dexie {
         
         // Note: Full effect requires page reload since cloud.configure() 
         // should be called before database operations begin
-        console.log('[db] Cloud URL updated. Reload required for full effect.');
+        console.info('[db] Cloud URL updated. Reload required for full effect.');
     }
 
     // Check if cloud sync is enabled and configured

@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import type { HandoffItem, PlainContent } from '../types';
+import type { HandoffItem, PlainContent, EncryptedContent } from '../types';
 import { useApp, useNotification, useDb } from '../context';
 import { useClipboard, useSwipeGesture } from '../hooks';
 import { decryptContent, haptics } from '../utils';
@@ -62,7 +62,7 @@ export function HandoffItemCard({ item, onStatusChange }: HandoffItemCardProps) 
 
         try {
             const decrypted = await decryptContent(
-                item.content as { ciphertext: string; crypto: any },
+                item.content as EncryptedContent,
                 passphrase
             );
             setDecryptedContent(decrypted);
@@ -74,7 +74,7 @@ export function HandoffItemCard({ item, onStatusChange }: HandoffItemCardProps) 
             }
 
             notify.success('Decrypted successfully');
-        } catch (error) {
+        } catch {
             notify.error('Incorrect passphrase');
         } finally {
             setIsDecrypting(false);

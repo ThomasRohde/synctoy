@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { useObservable } from 'dexie-react-hooks';
 import { db, cloudDb } from '../utils/storage/db';
 
 interface AuthInteraction {
@@ -23,34 +22,37 @@ export function useAuthInteraction() {
         }
 
         const subscription = cloudDb.cloud.userInteraction.subscribe({
-            next: (ui: any) => {
-                if (!ui) {
+            next: (ui: unknown) => {
+                if (!ui || typeof ui !== 'object') {
                     setInteraction(null);
                     return;
                 }
 
+                const interaction = ui as Record<string, unknown>;
                 // Map the Dexie Cloud userInteraction to our AuthInteraction type
                 setInteraction({
-                    type: ui.type as AuthInteraction['type'],
-                    title: ui.title,
-                    alerts: ui.alerts,
-                    fields: ui.fields,
-                    submitLabel: ui.submitLabel,
-                    cancelLabel: ui.cancelLabel,
+                    type: interaction.type as AuthInteraction['type'],
+                    title: interaction.title as string | undefined,
+                    alerts: interaction.alerts as AuthInteraction['alerts'],
+                    fields: interaction.fields as AuthInteraction['fields'],
+                    submitLabel: interaction.submitLabel as string | undefined,
+                    cancelLabel: interaction.cancelLabel as string | undefined,
                     onSubmit: async (fields: Record<string, string>) => {
                         try {
-                            await ui.onSubmit(fields);
+                            const onSubmit = interaction.onSubmit as (fields: Record<string, string>) => Promise<void>;
+                            await onSubmit(fields);
                         } catch (error) {
                             console.error('Auth submission error:', error);
                         }
                     },
                     onCancel: () => {
-                        ui.onCancel();
+                        const onCancel = interaction.onCancel as () => void;
+                        onCancel();
                         setInteraction(null);
                     },
                 });
             },
-            error: (err: any) => {
+            error: (err: unknown) => {
                 console.error('User interaction error:', err);
                 setInteraction(null);
             },

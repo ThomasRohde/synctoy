@@ -19,18 +19,19 @@ export function useCurrentUser(): CurrentUserInfo | null {
 
         // Subscribe to currentUser changes
         const subscription = cloudDb.cloud.currentUser.subscribe({
-            next: (user: any) => {
-                if (user) {
+            next: (user: unknown) => {
+                if (user && typeof user === 'object') {
+                    const userObj = user as Record<string, unknown>;
                     setCurrentUser({
-                        userId: user.userId || '',
-                        email: user.email,
-                        isLoggedIn: !!user.isLoggedIn,
+                        userId: (userObj.userId as string) || '',
+                        email: userObj.email as string | undefined,
+                        isLoggedIn: !!userObj.isLoggedIn,
                     });
                 } else {
                     setCurrentUser(null);
                 }
             },
-            error: (err: any) => {
+            error: (err: unknown) => {
                 console.error('Current user subscription error:', err);
                 setCurrentUser(null);
             },

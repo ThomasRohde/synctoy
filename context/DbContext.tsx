@@ -19,9 +19,9 @@ export function DbProvider({ children }: { children: ReactNode }) {
                 try {
                     const exists = await Dexie.exists(dbName);
                     if (exists) {
-                        console.log(`[DbProvider] Deleting old database: ${dbName}`);
+                        console.info(`[DbProvider] Deleting old database: ${dbName}`);
                         await Dexie.delete(dbName);
-                        console.log(`[DbProvider] Deleted old database: ${dbName}`);
+                        console.info(`[DbProvider] Deleted old database: ${dbName}`);
                     }
                 } catch (err) {
                     console.warn(`[DbProvider] Failed to delete old database ${dbName}:`, err);

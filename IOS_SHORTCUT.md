@@ -157,29 +157,11 @@ Shortcuts launched from the Home Screen sometimes have fewer prompts than those 
 3. Tap **"Add to Home Screen"**
 4. Use this icon to trigger the shortcut directly
 
-### Alternative: Clipboard-Based Approach (Zero Prompts)
-
-For a prompt-free experience, use this alternative approach:
-
-1. **Receive** [Any Input] from [Share Sheet]
-2. **Random Number** + **Format Date** → create nonce
-3. **Build URL** (same as before)
-4. **Copy to Clipboard** [URL]
-5. **Show Notification**: "Copied! Tap to open Handoff"
-6. **Open App** → Safari (optional)
-
-This copies the deep link to clipboard instead of opening it directly. Then:
-- Open Safari and paste the URL, OR
-- Open Handoff Lite and it will detect the clipboard content
-
 ### Why Prompts Exist
 
-The "Allow [shortcut] to open [URL]?" prompt is an iOS security feature that cannot be fully disabled. It protects users from malicious shortcuts that could:
-- Open phishing sites
-- Trigger unwanted downloads
-- Redirect to harmful content
+The "Allow [shortcut] to open [URL]?" prompt is an iOS security feature that cannot be fully disabled. It protects users from malicious shortcuts that could open phishing sites or trigger unwanted actions.
 
-The prompts reduce with trust over time, but Apple prioritizes security over convenience here.
+The good news: **prompts reduce with trust over time**. After using the shortcut regularly, iOS learns to trust it and may stop asking for confirmation.
 
 ## Troubleshooting
 

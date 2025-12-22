@@ -10,6 +10,17 @@ import type { DeviceProfile, Route, InboxFilter, SharePayload } from '../types';
 import { db, DEFAULT_DEVICE_PROFILE } from '../utils/storage/db';
 import { parseShareParams } from '../utils/url';
 
+// Check localStorage directly for setup complete status
+// This is the source of truth, not IndexedDB (which may be synced/reset by cloud)
+const SETUP_COMPLETE_STORAGE_KEY = 'handoff-lite-setup-complete';
+function isSetupCompleteFromStorage(): boolean {
+    try {
+        return localStorage.getItem(SETUP_COMPLETE_STORAGE_KEY) === 'true';
+    } catch {
+        return false;
+    }
+}
+
 interface AppContextValue {
     // Navigation
     route: Route;
@@ -86,7 +97,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
                 }
 
                 // Navigate to setup if not complete
-                if (!profile.isSetupComplete) {
+                // Check localStorage directly - it's the source of truth for this device
+                if (!isSetupCompleteFromStorage()) {
                     setRoute('setup');
                 }
 

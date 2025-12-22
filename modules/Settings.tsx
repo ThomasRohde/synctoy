@@ -1,42 +1,69 @@
 import { useState, useEffect } from 'react';
+import {
+    Smartphone,
+    SlidersHorizontal,
+    Database,
+    Info,
+    Tag,
+    Folder,
+    Share2,
+    Briefcase,
+    Bell,
+    Clock,
+    Key,
+    Cloud,
+    CloudOff,
+    CloudSync,
+    CloudCheck,
+    RotateCw,
+    WifiOff,
+    HelpCircle,
+    User,
+    CheckCircle,
+    AlertTriangle,
+    Trash2,
+    AlertCircle,
+    Download,
+    MonitorSmartphone,
+} from 'lucide-react';
 import { useApp, useNotification, useDb } from '../context';
 import { Header, CategorySelector } from '../components';
 import { useSyncState, useCurrentUser, usePwaInstall, type SyncStatus } from '../hooks';
 import { cloudDb } from '../utils/storage/db';
 
 // Helper to get sync status display info
-function getSyncStatusInfo(status: SyncStatus): { color: string; label: string; icon: string } {
+function getSyncStatusInfo(status: SyncStatus): { color: string; label: string; icon: typeof CloudOff } {
     switch (status) {
         case 'local-only':
-            return { color: 'bg-gray-500', label: 'Local-only mode', icon: 'cloud_off' };
+            return { color: 'bg-gray-500', label: 'Local-only mode', icon: CloudOff };
         case 'connecting':
-            return { color: 'bg-yellow-500', label: 'Connecting...', icon: 'cloud_sync' };
+            return { color: 'bg-yellow-500', label: 'Connecting...', icon: CloudSync };
         case 'connected':
-            return { color: 'bg-green-500', label: 'Connected', icon: 'cloud_done' };
+            return { color: 'bg-green-500', label: 'Connected', icon: CloudCheck };
         case 'syncing':
-            return { color: 'bg-blue-500', label: 'Syncing...', icon: 'sync' };
+            return { color: 'bg-blue-500', label: 'Syncing...', icon: RotateCw };
         case 'disconnected':
-            return { color: 'bg-orange-500', label: 'Disconnected', icon: 'cloud_off' };
+            return { color: 'bg-orange-500', label: 'Disconnected', icon: CloudOff };
         case 'offline':
-            return { color: 'bg-amber-500', label: 'Offline', icon: 'wifi_off' };
+            return { color: 'bg-amber-500', label: 'Offline', icon: WifiOff };
         case 'error':
-            return { color: 'bg-red-500', label: 'Sync error', icon: 'cloud_off' };
+            return { color: 'bg-red-500', label: 'Sync error', icon: CloudOff };
         default:
-            return { color: 'bg-gray-500', label: 'Unknown', icon: 'help' };
+            return { color: 'bg-gray-500', label: 'Unknown', icon: HelpCircle };
     }
 }
 
 interface SettingSection {
     id: string;
     label: string;
-    icon: string;
+    icon: typeof Smartphone;
 }
 
 const SECTIONS: SettingSection[] = [
-    { id: 'device', label: 'Device', icon: 'devices' },
-    { id: 'behavior', label: 'Behavior', icon: 'tune' },
-    { id: 'data', label: 'Data', icon: 'storage' },
-    { id: 'about', label: 'About', icon: 'info' },
+    { id: 'device', label: 'Device', icon: Smartphone },
+    { id: 'behavior', label: 'Behavior', icon: SlidersHorizontal },
+    { id: 'data', label: 'Data', icon: Database },
+    { id: 'about', label: 'About', icon: Info },
 ];
 
 export function Settings() {
@@ -139,24 +166,25 @@ export function Settings() {
                     {/* Mobile section tabs */}
                     <div className="sm:hidden mb-4 overflow-x-auto -mx-4 px-4">
                         <div className="flex gap-1 p-1 bg-white/5 rounded-lg w-max min-w-full">
-                            {SECTIONS.map(section => (
-                                <button
-                                    key={section.id}
-                                    onClick={() => setActiveSection(section.id)}
-                                    className={`
-                                        flex items-center gap-2 px-3 py-2.5 min-h-[44px] rounded-md text-sm
-                                        ${activeSection === section.id
-                                            ? 'bg-primary text-white'
-                                            : 'text-gray-400'
-                                        }
-                                    `}
-                                >
-                                    <span className="material-symbols-outlined text-lg">
-                                        {section.icon}
-                                    </span>
-                                    {section.label}
-                                </button>
-                            ))}
+                            {SECTIONS.map(section => {
+                                const IconComponent = section.icon;
+                                return (
+                                    <button
+                                        key={section.id}
+                                        onClick={() => setActiveSection(section.id)}
+                                        className={`
+                                            flex items-center gap-2 px-3 py-2.5 min-h-[44px] rounded-md text-sm
+                                            ${activeSection === section.id
+                                                ? 'bg-primary text-white'
+                                                : 'text-gray-400'
+                                            }
+                                        `}
+                                    >
+                                        <IconComponent className="w-4 h-4" />
+                                        {section.label}
+                                    </button>
+                                );
+                            })}
                         </div>
                     </div>
 
@@ -164,25 +192,26 @@ export function Settings() {
                         {/* Sidebar navigation - desktop only */}
                         <nav className="hidden sm:block w-48 flex-shrink-0">
                             <div className="sticky top-[calc(var(--nav-height)+16px)] space-y-1">
-                                {SECTIONS.map(section => (
-                                    <button
-                                        key={section.id}
-                                        onClick={() => setActiveSection(section.id)}
-                                        className={`
-                                            w-full flex items-center gap-3 px-3 py-2.5 min-h-[44px] rounded-lg text-left
-                                            transition-colors duration-150
-                                            ${activeSection === section.id
-                                                ? 'bg-primary/20 text-primary'
-                                                : 'text-gray-400 hover:text-white hover:bg-white/5'
-                                            }
-                                        `}
-                                    >
-                                        <span className="material-symbols-outlined text-lg">
-                                            {section.icon}
-                                        </span>
-                                        <span className="text-sm font-medium">{section.label}</span>
-                                    </button>
-                                ))}
+                                {SECTIONS.map(section => {
+                                    const IconComponent = section.icon;
+                                    return (
+                                        <button
+                                            key={section.id}
+                                            onClick={() => setActiveSection(section.id)}
+                                            className={`
+                                                w-full flex items-center gap-3 px-3 py-2.5 min-h-[44px] rounded-lg text-left
+                                                transition-colors duration-150
+                                                ${activeSection === section.id
+                                                    ? 'bg-primary/20 text-primary'
+                                                    : 'text-gray-400 hover:text-white hover:bg-white/5'
+                                                }
+                                            `}
+                                        >
+                                            <IconComponent className="w-4 h-4" />
+                                            <span className="text-sm font-medium">{section.label}</span>
+                                        </button>
+                                    );
+                                })}
                             </div>
                         </nav>
 
@@ -193,7 +222,7 @@ export function Settings() {
                             <div className="space-y-6">
                                 <div className="glass-card rounded-xl p-4 space-y-4">
                                     <h3 className="font-medium flex items-center gap-2">
-                                        <span className="material-symbols-outlined">badge</span>
+                                        <Tag className="w-4 h-4" />
                                         Device Name
                                     </h3>
                                     <input
@@ -210,7 +239,7 @@ export function Settings() {
 
                                 <div className="glass-card rounded-xl p-4 space-y-4">
                                     <h3 className="font-medium flex items-center gap-2">
-                                        <span className="material-symbols-outlined">category</span>
+                                        <Folder className="w-4 h-4" />
                                         Device Category
                                     </h3>
                                     <CategorySelector
@@ -224,7 +253,7 @@ export function Settings() {
 
                                 <div className="glass-card rounded-xl p-4 space-y-4">
                                     <h3 className="font-medium flex items-center gap-2">
-                                        <span className="material-symbols-outlined">share</span>
+                                        <Share2 className="w-4 h-4" />
                                         Default Target
                                     </h3>
                                     <CategorySelector
@@ -244,9 +273,7 @@ export function Settings() {
                                 <div className="glass-card rounded-xl p-4">
                                     <label className="flex items-center justify-between cursor-pointer">
                                         <div className="flex items-center gap-3">
-                                            <span className="material-symbols-outlined text-amber-400">
-                                                work
-                                            </span>
+                                            <Briefcase className="w-5 h-5 text-amber-400" />
                                             <div>
                                                 <span className="font-medium">Work Mode</span>
                                                 <p className="text-sm text-gray-400">
@@ -275,9 +302,7 @@ export function Settings() {
                                 <div className="glass-card rounded-xl p-4">
                                     <label className="flex items-center justify-between cursor-pointer">
                                         <div className="flex items-center gap-3">
-                                            <span className="material-symbols-outlined text-blue-400">
-                                                notifications_active
-                                            </span>
+                                            <Bell className="w-5 h-5 text-blue-400" />
                                             <div>
                                                 <span className="font-medium">Browser Notifications</span>
                                                 <p className="text-sm text-gray-400">
@@ -319,7 +344,7 @@ export function Settings() {
 
                                 <div className="glass-card rounded-xl p-4 space-y-4">
                                     <h3 className="font-medium flex items-center gap-2">
-                                        <span className="material-symbols-outlined">schedule</span>
+                                        <Clock className="w-4 h-4" />
                                         Auto-Archive Retention
                                     </h3>
                                     <div className="flex items-center gap-4">
@@ -342,7 +367,7 @@ export function Settings() {
 
                                 <div className="glass-card rounded-xl p-4 space-y-4">
                                     <h3 className="font-medium flex items-center gap-2">
-                                        <span className="material-symbols-outlined">key</span>
+                                        <Key className="w-4 h-4" />
                                         Remember Passphrase
                                     </h3>
                                     <select
@@ -367,7 +392,7 @@ export function Settings() {
                             <div className="space-y-6">
                                 <div className="glass-card rounded-xl p-4 space-y-4">
                                     <h3 className="font-medium flex items-center gap-2">
-                                        <span className="material-symbols-outlined">cloud</span>
+                                        <Cloud className="w-4 h-4" />
                                         Cloud Sync URL
                                     </h3>
                                     <div className="space-y-2">
@@ -408,14 +433,14 @@ export function Settings() {
                                 {deviceProfile.cloudUrl && (
                                     <div className="glass-card rounded-xl p-4 space-y-4">
                                         <h3 className="font-medium flex items-center gap-2">
-                                            <span className="material-symbols-outlined">person</span>
+                                            <User className="w-4 h-4" />
                                             Authentication
                                         </h3>
                                         
                                         {currentUser?.isLoggedIn ? (
                                             <div className="space-y-3">
                                                 <div className="flex items-center gap-3 p-3 bg-green-500/10 rounded-lg border border-green-500/20">
-                                                    <span className="material-symbols-outlined text-green-400">check_circle</span>
+                                                    <CheckCircle className="w-5 h-5 text-green-400" />
                                                     <div className="flex-1">
                                                         <p className="font-medium text-green-300">Logged In</p>
                                                         <p className="text-sm text-gray-400">{currentUser.email || currentUser.userId}</p>
@@ -431,7 +456,7 @@ export function Settings() {
                                         ) : (
                                             <div className="space-y-3">
                                                 <div className="flex items-center gap-3 p-3 bg-yellow-500/10 rounded-lg border border-yellow-500/20">
-                                                    <span className="material-symbols-outlined text-yellow-400">warning</span>
+                                                    <AlertTriangle className="w-5 h-5 text-yellow-400" />
                                                     <p className="text-sm text-gray-300">Not logged in. Login to sync with user identity across devices.</p>
                                                 </div>
                                                 <button
@@ -451,7 +476,7 @@ export function Settings() {
 
                                 <div className="glass-card rounded-xl p-4 space-y-4">
                                     <h3 className="font-medium flex items-center gap-2">
-                                        <span className="material-symbols-outlined">cloud_sync</span>
+                                        <CloudSync className="w-4 h-4" />
                                         Sync Status
                                     </h3>
                                     <div className="flex items-center gap-3">
@@ -460,9 +485,7 @@ export function Settings() {
                                                 ? 'animate-pulse'
                                                 : ''
                                         }`} />
-                                        <span className="material-symbols-outlined text-lg text-gray-400">
-                                            {syncStatusInfo.icon}
-                                        </span>
+                                        <syncStatusInfo.icon className="w-5 h-5 text-gray-400" />
                                         <span className="text-gray-300">{syncStatusInfo.label}</span>
                                     </div>
                                     {syncState.isCloudEnabled ? (
@@ -490,7 +513,7 @@ export function Settings() {
 
                                 <div className="glass-card rounded-xl p-4 space-y-4">
                                     <h3 className="font-medium flex items-center gap-2">
-                                        <span className="material-symbols-outlined">auto_delete</span>
+                                        <AlertCircle className="w-4 h-4" />
                                         Run Retention Now
                                     </h3>
                                     <p className="text-sm text-gray-400">
@@ -506,7 +529,7 @@ export function Settings() {
 
                                 <div className="glass-card rounded-xl p-4 space-y-4">
                                     <h3 className="font-medium flex items-center gap-2 text-red-400">
-                                        <span className="material-symbols-outlined">delete_forever</span>
+                                        <Trash2 className="w-4 h-4" />
                                         Clear Archived Items
                                     </h3>
                                     <p className="text-sm text-gray-400">
@@ -528,9 +551,7 @@ export function Settings() {
                             <div className="space-y-6">
                                 <div className="glass-card rounded-xl p-6 text-center">
                                     <div className="w-20 h-20 rounded-2xl bg-primary/20 flex items-center justify-center mx-auto mb-4">
-                                        <span className="material-symbols-outlined text-4xl text-primary">
-                                            swap_horiz
-                                        </span>
+                                        <ArrowLeftRight className="w-10 h-10 text-primary" />
                                     </div>
                                     <h2 className="text-2xl font-bold mb-2">Handoff Lite</h2>
                                     <p className="text-gray-400 mb-4">Version 0.1.0</p>
@@ -543,12 +564,12 @@ export function Settings() {
                                 {/* Install App card */}
                                 <div className="glass-card rounded-xl p-4 space-y-3">
                                     <h3 className="font-medium flex items-center gap-2">
-                                        <span className="material-symbols-outlined">install_desktop</span>
+                                        <MonitorSmartphone className="w-4 h-4" />
                                         Install App
                                     </h3>
                                     {pwaInstall.isInstalled ? (
                                         <div className="flex items-center gap-3 p-3 bg-green-500/10 rounded-lg border border-green-500/20">
-                                            <span className="material-symbols-outlined text-green-400">check_circle</span>
+                                            <CheckCircle className="w-5 h-5 text-green-400" />
                                             <p className="text-sm text-gray-300">App is installed on this device</p>
                                         </div>
                                     ) : pwaInstall.canInstall ? (
@@ -565,7 +586,7 @@ export function Settings() {
                                                 }}
                                                 className="w-full px-4 py-3 min-h-[44px] bg-primary text-white rounded-lg hover:bg-primary/80 transition-colors flex items-center justify-center gap-2"
                                             >
-                                                <span className="material-symbols-outlined">download</span>
+                                                <Download className="w-5 h-5" />
                                                 Install Handoff Lite
                                             </button>
                                         </div>
@@ -586,27 +607,27 @@ export function Settings() {
                                     <h3 className="font-medium">Features</h3>
                                     <ul className="space-y-2 text-sm text-gray-400">
                                         <li className="flex items-center gap-2">
-                                            <span className="material-symbols-outlined text-green-400 text-lg">check_circle</span>
+                                            <CheckCircle className="w-4 h-4 text-green-400" />
                                             Send URLs and text between devices
                                         </li>
                                         <li className="flex items-center gap-2">
-                                            <span className="material-symbols-outlined text-green-400 text-lg">check_circle</span>
+                                            <CheckCircle className="w-4 h-4 text-green-400" />
                                             Device targeting (Work/Private/Any)
                                         </li>
                                         <li className="flex items-center gap-2">
-                                            <span className="material-symbols-outlined text-green-400 text-lg">check_circle</span>
+                                            <CheckCircle className="w-4 h-4 text-green-400" />
                                             Optional AES-256-GCM encryption
                                         </li>
                                         <li className="flex items-center gap-2">
-                                            <span className="material-symbols-outlined text-green-400 text-lg">check_circle</span>
+                                            <CheckCircle className="w-4 h-4 text-green-400" />
                                             Offline-first with IndexedDB
                                         </li>
                                         <li className="flex items-center gap-2">
-                                            <span className="material-symbols-outlined text-green-400 text-lg">check_circle</span>
+                                            <CheckCircle className="w-4 h-4 text-green-400" />
                                             Optional Dexie Cloud sync
                                         </li>
                                         <li className="flex items-center gap-2">
-                                            <span className="material-symbols-outlined text-green-400 text-lg">check_circle</span>
+                                            <CheckCircle className="w-4 h-4 text-green-400" />
                                             Status tracking (New → Done → Archived)
                                         </li>
                                     </ul>

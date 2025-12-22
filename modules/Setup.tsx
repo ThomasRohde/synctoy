@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { ArrowLeftRight, Smartphone, SlidersHorizontal, Briefcase, Clock, ArrowRight, CheckCircle, Briefcase as WorkIcon, Home, Globe } from 'lucide-react';
 import { useApp, useNotification } from '../context';
 import { CategorySelector, LoadingSpinner } from '../components';
 import type { DeviceCategory } from '../types';
@@ -62,9 +63,7 @@ export function Setup() {
                 {step === 'welcome' && (
                     <div className="text-center animate-fade-in-up">
                         <div className="w-24 h-24 rounded-3xl bg-primary/20 flex items-center justify-center mx-auto mb-6">
-                            <span className="material-symbols-outlined text-5xl text-primary">
-                                swap_horiz
-                            </span>
+                            <ArrowLeftRight className="w-12 h-12 text-primary" />
                         </div>
                         <h1 className="text-3xl font-bold mb-4">Handoff Lite</h1>
                         <p className="text-gray-400 mb-8">
@@ -83,9 +82,7 @@ export function Setup() {
                 {step === 'device' && (
                     <div className="animate-fade-in-up">
                         <div className="text-center mb-8">
-                            <span className="material-symbols-outlined text-4xl text-primary mb-2">
-                                devices
-                            </span>
+                            <Smartphone className="w-10 h-10 text-primary mb-2 mx-auto" />
                             <h2 className="text-2xl font-bold">Set up this device</h2>
                             <p className="text-gray-400 mt-2">
                                 Give this device a name and category
@@ -113,9 +110,21 @@ export function Setup() {
                             />
 
                             <p className="text-sm text-gray-400">
-                                {category === 'work' && '💼 Work devices only receive work-targeted items'}
-                                {category === 'private' && '🏠 Private devices only receive private-targeted items'}
-                                {category === 'any' && '🌐 This device will receive all items'}
+                                {category === 'work' && (
+                                    <span className="flex items-center gap-2 justify-center">
+                                        <Briefcase className="w-4 h-4" /> Work devices only receive work-targeted items
+                                    </span>
+                                )}
+                                {category === 'private' && (
+                                    <span className="flex items-center gap-2 justify-center">
+                                        <Home className="w-4 h-4" /> Private devices only receive private-targeted items
+                                    </span>
+                                )}
+                                {category === 'any' && (
+                                    <span className="flex items-center gap-2 justify-center">
+                                        <Globe className="w-4 h-4" /> This device will receive all items
+                                    </span>
+                                )}
                             </p>
                         </div>
 
@@ -140,9 +149,7 @@ export function Setup() {
                 {step === 'preferences' && (
                     <div className="animate-fade-in-up">
                         <div className="text-center mb-8">
-                            <span className="material-symbols-outlined text-4xl text-primary mb-2">
-                                tune
-                            </span>
+                            <SlidersHorizontal className="w-10 h-10 text-primary mb-2 mx-auto" />
                             <h2 className="text-2xl font-bold">Preferences</h2>
                             <p className="text-gray-400 mt-2">
                                 Configure how Handoff Lite works
@@ -153,9 +160,7 @@ export function Setup() {
                             <div className="glass-card rounded-xl p-4">
                                 <label className="flex items-center justify-between cursor-pointer">
                                     <div className="flex items-center gap-3">
-                                        <span className="material-symbols-outlined text-amber-400">
-                                            work
-                                        </span>
+                                        <WorkIcon className="w-5 h-5 text-amber-400" />
                                         <div>
                                             <span className="font-medium">Work Mode</span>
                                             <p className="text-sm text-gray-400">
@@ -183,7 +188,7 @@ export function Setup() {
 
                             <div className="glass-card rounded-xl p-4">
                                 <h3 className="font-medium flex items-center gap-2 mb-4">
-                                    <span className="material-symbols-outlined">schedule</span>
+                                    <Clock className="w-5 h-5" />
                                     Auto-Archive After
                                 </h3>
                                 <div className="flex items-center gap-4">
@@ -219,7 +224,7 @@ export function Setup() {
                                 ) : (
                                     <>
                                         Complete Setup
-                                        <span className="material-symbols-outlined">arrow_forward</span>
+                                        <ArrowRight className="w-5 h-5" />
                                     </>
                                 )}
                             </button>
@@ -231,9 +236,7 @@ export function Setup() {
                 {step === 'complete' && (
                     <div className="text-center animate-pop-in">
                         <div className="w-24 h-24 rounded-full bg-green-500/20 flex items-center justify-center mx-auto mb-6">
-                            <span className="material-symbols-outlined text-5xl text-green-500">
-                                check_circle
-                            </span>
+                            <CheckCircle className="w-12 h-12 text-green-500" />
                         </div>
                         <h2 className="text-2xl font-bold mb-4">You're all set!</h2>
                         <p className="text-gray-400">

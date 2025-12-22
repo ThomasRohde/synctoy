@@ -1,16 +1,17 @@
+import { Inbox, Send, Settings } from 'lucide-react';
 import { useApp } from '../context';
 import type { Route } from '../types';
 
 interface NavItem {
     id: Route;
-    icon: string;
+    icon: typeof Inbox;
     label: string;
 }
 
 const NAV_ITEMS: NavItem[] = [
-    { id: 'inbox', icon: 'inbox', label: 'Inbox' },
-    { id: 'send', icon: 'send', label: 'Send' },
-    { id: 'settings', icon: 'settings', label: 'Settings' },
+    { id: 'inbox', icon: Inbox, label: 'Inbox' },
+    { id: 'send', icon: Send, label: 'Send' },
+    { id: 'settings', icon: Settings, label: 'Settings' },
 ];
 
 export function BottomNav() {
@@ -38,16 +39,11 @@ export function BottomNav() {
                                 ${isActive ? 'text-primary' : 'text-gray-400 hover:text-white'}
                             `}
                         >
-                            <span
-                                className="material-symbols-outlined text-2xl"
-                                style={{
-                                    fontVariationSettings: isActive
-                                        ? "'FILL' 1, 'wght' 500"
-                                        : "'FILL' 0, 'wght' 400",
-                                }}
-                            >
-                                {item.icon}
-                            </span>
+                            <item.icon
+                                className="w-6 h-6"
+                                strokeWidth={isActive ? 2.5 : 2}
+                                fill={isActive ? 'currentColor' : 'none'}
+                            />
                             <span className="text-xs mt-1">{item.label}</span>
                         </button>
                     );

@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
+import { ClipboardPaste, Link2, FileText, Send as SendIcon, Lock, AlertTriangle } from 'lucide-react';
 import { useApp, useNotification, useDb } from '../context';
 import { useClipboard } from '../hooks';
 import { Header, CategorySelector, LoadingSpinner } from '../components';
@@ -222,9 +223,7 @@ export function Composer() {
                         onClick={handlePasteAndSend}
                         className="w-full flex items-center justify-center gap-3 px-6 py-4 min-h-[44px] bg-primary/20 hover:bg-primary/30 border-2 border-dashed border-primary/50 rounded-xl transition-colors"
                     >
-                        <span className="material-symbols-outlined text-2xl text-primary">
-                            content_paste
-                        </span>
+                        <ClipboardPaste className="w-6 h-6 text-primary" />
                         <span className="text-lg font-medium text-primary">
                             Paste from Clipboard
                         </span>
@@ -240,8 +239,12 @@ export function Composer() {
                     <div>
                         <label className="block text-sm text-gray-400 mb-2">
                             Content
-                            <span className="ml-2 text-xs">
-                                {contentKind === 'url' ? '🔗 URL detected' : '📝 Text detected'}
+                            <span className="ml-2 text-xs inline-flex items-center gap-1">
+                                {contentKind === 'url' ? (
+                                    <><Link2 className="w-3 h-3" /> URL detected</>
+                                ) : (
+                                    <><FileText className="w-3 h-3" /> Text detected</>
+                                )}
                             </span>
                         </label>
                         <textarea
@@ -253,7 +256,7 @@ export function Composer() {
                         />
                         {isWorkModeViolation && (
                             <p className="mt-2 text-sm text-red-400 flex items-center gap-2">
-                                <span className="material-symbols-outlined text-lg">warning</span>
+                                <AlertTriangle className="w-4 h-4" />
                                 Work Mode is enabled. Only URLs are allowed.
                             </p>
                         )}
@@ -270,9 +273,7 @@ export function Composer() {
                     <div className="glass-card rounded-xl p-4">
                         <label className="flex items-center justify-between cursor-pointer">
                             <div className="flex items-center gap-3">
-                                <span className="material-symbols-outlined text-rose-400">
-                                    lock
-                                </span>
+                                <Lock className="w-5 h-5 text-rose-400" />
                                 <div>
                                     <span className="font-medium">Sensitive Mode</span>
                                     <p className="text-sm text-gray-400">
@@ -331,7 +332,7 @@ export function Composer() {
                             <LoadingSpinner size="sm" />
                         ) : (
                             <>
-                                <span className="material-symbols-outlined">send</span>
+                                <SendIcon className="w-5 h-5" />
                                 Send
                             </>
                         )}

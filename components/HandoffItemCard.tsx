@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
+import { Archive, Link2, FileText, Check, Unplug, Copy, ExternalLink, Eye, EyeOff, Briefcase, Home, Globe, Lock } from 'lucide-react';
 import type { HandoffItem, PlainContent, EncryptedContent } from '../types';
 import { useApp, useNotification, useDb } from '../context';
 import { useClipboard, useSwipeGesture } from '../hooks';
@@ -143,7 +144,7 @@ export function HandoffItemCard({ item, onStatusChange }: HandoffItemCardProps) 
 
     const getPreview = () => {
         if (isEncrypted && !decryptedContent) {
-            return '🔒 Encrypted content';
+            return 'Encrypted content';
         }
         if (content?.url) {
             return getUrlPreview(content.url);
@@ -179,9 +180,7 @@ export function HandoffItemCard({ item, onStatusChange }: HandoffItemCardProps) 
             {/* Swipe background indicator */}
             {swipeState.isSwiping && swipeState.direction === 'left' && (
                 <div className="absolute inset-0 bg-red-500/20 rounded-xl flex items-center justify-end px-6">
-                    <span className="material-symbols-outlined text-red-400 text-2xl">
-                        archive
-                    </span>
+                    <Archive className="w-6 h-6 text-red-400" />
                 </div>
             )}
 
@@ -207,9 +206,11 @@ export function HandoffItemCard({ item, onStatusChange }: HandoffItemCardProps) 
                                 <div className={`w-8 h-8 rounded flex items-center justify-center ${
                                     item.kind === 'url' ? 'kind-url' : 'kind-text'
                                 }`}>
-                                    <span className="material-symbols-outlined text-sm">
-                                        {item.kind === 'url' ? 'link' : 'notes'}
-                                    </span>
+                                    {item.kind === 'url' ? (
+                                        <Link2 className="w-4 h-4" />
+                                    ) : (
+                                        <FileText className="w-4 h-4" />
+                                    )}
                                 </div>
                             )}
                         </div>
@@ -246,15 +247,17 @@ export function HandoffItemCard({ item, onStatusChange }: HandoffItemCardProps) 
                     </span>
 
                     {/* Target category badge */}
-                    <span className={`status-badge category-${item.targetCategory}`}>
-                        {item.targetCategory === 'work' ? '💼' : item.targetCategory === 'private' ? '🏠' : '🌐'}{' '}
+                    <span className={`status-badge category-${item.targetCategory} flex items-center gap-1`}>
+                        {item.targetCategory === 'work' && <Briefcase className="w-3 h-3" />}
+                        {item.targetCategory === 'private' && <Home className="w-3 h-3" />}
+                        {item.targetCategory === 'any' && <Globe className="w-3 h-3" />}
                         {item.targetCategory}
                     </span>
 
                     {/* Encrypted badge */}
                     {item.isSensitive && (
-                        <span className="status-badge encrypted-badge">
-                            🔒 encrypted
+                        <span className="status-badge encrypted-badge flex items-center gap-1">
+                            <Lock className="w-3 h-3" /> encrypted
                         </span>
                     )}
 
@@ -311,9 +314,13 @@ export function HandoffItemCard({ item, onStatusChange }: HandoffItemCardProps) 
                         onClick={handleOpen}
                         className="flex items-center gap-1.5 px-3 py-2.5 min-h-[44px] bg-primary/20 hover:bg-primary/30 text-primary rounded-lg text-sm transition-colors"
                     >
-                        <span className="material-symbols-outlined text-lg">
-                            {item.kind === 'url' ? 'open_in_new' : 'visibility'}
-                        </span>
+                        {item.kind === 'url' ? (
+                            <ExternalLink className="w-4 h-4" />
+                        ) : isExpanded ? (
+                            <EyeOff className="w-4 h-4" />
+                        ) : (
+                            <Eye className="w-4 h-4" />
+                        )}
                         {item.kind === 'url' ? 'Open' : isExpanded ? 'Hide' : 'View'}
                     </button>
 
@@ -321,7 +328,7 @@ export function HandoffItemCard({ item, onStatusChange }: HandoffItemCardProps) 
                         onClick={handleCopy}
                         className="flex items-center gap-1.5 px-3 py-2.5 min-h-[44px] bg-white/10 hover:bg-white/20 rounded-lg text-sm transition-colors"
                     >
-                        <span className="material-symbols-outlined text-lg">content_copy</span>
+                        <Copy className="w-4 h-4" />
                         Copy
                     </button>
 
@@ -330,7 +337,7 @@ export function HandoffItemCard({ item, onStatusChange }: HandoffItemCardProps) 
                             onClick={handleMarkDone}
                             className="flex items-center gap-1.5 px-3 py-2.5 min-h-[44px] bg-green-500/20 hover:bg-green-500/30 text-green-400 rounded-lg text-sm transition-colors"
                         >
-                            <span className="material-symbols-outlined text-lg">check</span>
+                            <Check className="w-4 h-4" />
                             Done
                         </button>
                     )}
@@ -341,7 +348,7 @@ export function HandoffItemCard({ item, onStatusChange }: HandoffItemCardProps) 
                             className="p-2.5 min-w-[44px] min-h-[44px] flex items-center justify-center bg-white/10 hover:bg-white/20 rounded-lg transition-colors"
                             title="Archive"
                         >
-                            <span className="material-symbols-outlined text-lg">archive</span>
+                            <Archive className="w-4 h-4" />
                         </button>
                     ) : (
                         <button
@@ -349,7 +356,7 @@ export function HandoffItemCard({ item, onStatusChange }: HandoffItemCardProps) 
                             className="p-2.5 min-w-[44px] min-h-[44px] flex items-center justify-center bg-white/10 hover:bg-white/20 rounded-lg transition-colors"
                             title="Unarchive"
                         >
-                            <span className="material-symbols-outlined text-lg">unarchive</span>
+                            <Unplug className="w-4 h-4" />
                         </button>
                     )}
                 </div>

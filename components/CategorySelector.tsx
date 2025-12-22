@@ -1,3 +1,4 @@
+import { Briefcase, Home, Globe } from 'lucide-react';
 import type { DeviceCategory } from '../types';
 
 interface CategorySelectorProps {
@@ -6,10 +7,10 @@ interface CategorySelectorProps {
     label?: string;
 }
 
-const CATEGORIES: { id: DeviceCategory; label: string; emoji: string; color: string }[] = [
-    { id: 'work', label: 'Work', emoji: '💼', color: 'category-work' },
-    { id: 'private', label: 'Private', emoji: '🏠', color: 'category-private' },
-    { id: 'any', label: 'Any', emoji: '🌐', color: 'category-any' },
+const CATEGORIES: { id: DeviceCategory; label: string; icon: typeof Briefcase; color: string }[] = [
+    { id: 'work', label: 'Work', icon: Briefcase, color: 'category-work' },
+    { id: 'private', label: 'Private', icon: Home, color: 'category-private' },
+    { id: 'any', label: 'Any', icon: Globe, color: 'category-any' },
 ];
 
 export function CategorySelector({ value, onChange, label }: CategorySelectorProps) {
@@ -34,7 +35,7 @@ export function CategorySelector({ value, onChange, label }: CategorySelectorPro
                                 }
                             `}
                         >
-                            <span>{cat.emoji}</span>
+                            <cat.icon className="w-4 h-4" />
                             <span className="text-sm font-medium">{cat.label}</span>
                         </button>
                     );

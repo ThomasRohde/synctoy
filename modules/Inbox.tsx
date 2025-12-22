@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import { Search, X, RefreshCw, RotateCw, SearchX, MailCheck, Inbox as InboxIcon, Archive } from 'lucide-react';
 import { useApp } from '../context';
 import { useHandoffItems, usePullToRefresh } from '../hooks';
 import { Header, FilterTabs, HandoffItemCard, EmptyState, LoadingSpinner } from '../components';
@@ -75,7 +76,7 @@ export function Inbox() {
         // If searching and no results
         if (searchQuery.trim()) {
             return {
-                icon: 'search_off',
+                icon: SearchX,
                 title: 'No results found',
                 description: `No items match "${searchQuery}". Try a different search term.`,
             };
@@ -84,25 +85,25 @@ export function Inbox() {
         switch (inboxFilter) {
             case 'new':
                 return {
-                    icon: 'mark_email_read',
+                    icon: MailCheck,
                     title: 'All caught up!',
                     description: 'No new items waiting for you.',
                 };
             case 'active':
                 return {
-                    icon: 'inbox',
+                    icon: InboxIcon,
                     title: 'Inbox is empty',
                     description: 'Send something from another device to get started.',
                 };
             case 'archived':
                 return {
-                    icon: 'archive',
+                    icon: Archive,
                     title: 'No archived items',
                     description: 'Items you archive will appear here.',
                 };
             default:
                 return {
-                    icon: 'inbox',
+                    icon: InboxIcon,
                     title: 'No items yet',
                     description: 'Start by sending your first handoff.',
                 };
@@ -134,13 +135,11 @@ export function Inbox() {
                             opacity: Math.min(pullState.pullDistance / 80, 1),
                         }}
                     >
-                        <span
-                            className={`material-symbols-outlined text-primary ${
-                                pullState.isRefreshing ? 'animate-spin' : ''
-                            }`}
-                        >
-                            {pullState.isRefreshing ? 'sync' : 'refresh'}
-                        </span>
+                        {pullState.isRefreshing ? (
+                            <RotateCw className="w-6 h-6 text-primary animate-spin" />
+                        ) : (
+                            <RefreshCw className="w-6 h-6 text-primary" />
+                        )}
                     </div>
                 )}
 
@@ -148,9 +147,7 @@ export function Inbox() {
                     {/* Search box */}
                     <div className="pt-4 pb-2">
                         <div className="relative">
-                            <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-text-secondary text-xl">
-                                search
-                            </span>
+                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-text-secondary" />
                             <input
                                 type="text"
                                 placeholder="Search items..."
@@ -164,9 +161,7 @@ export function Inbox() {
                                     className="absolute right-3 top-1/2 -translate-y-1/2 min-w-[44px] min-h-[44px] flex items-center justify-center text-text-secondary hover:text-text-primary transition-colors"
                                     aria-label="Clear search"
                                 >
-                                    <span className="material-symbols-outlined text-xl">
-                                        close
-                                    </span>
+                                    <X className="w-5 h-5" />
                                 </button>
                             )}
                         </div>

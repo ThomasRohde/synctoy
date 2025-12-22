@@ -825,12 +825,36 @@
       "blockedBy": null,
       "lastWorkedOn": "2025-12-22T06:59:18.914423",
       "notes": "Implementation: Apply CSS -webkit-touch-callout: none and user-select: none to buttons and nav elements. For links that should open URLs, consider custom long-press handler showing action sheet with Open/Copy options. Add touch-action: manipulation to prevent double-tap zoom delay. Apply selectively - don't disable on text content users might want to copy. Edge cases: The text content preview in HandoffItemCard should remain selectable. Links in content might need special handling. Dependencies: None. Context: Native apps don't show the Safari link preview/context menu. Gotchas: Be careful not to break accessibility - screen readers should still work."
+    },
+    {
+      "id": "F031",
+      "category": "ui",
+      "priority": 3,
+      "description": "Markdown Rendering for Text Handoffs - detect and render markdown content from chatbots (Claude/ChatGPT style) with syntax highlighting and proper formatting",
+      "dependencies": [],
+      "acceptanceCriteria": [
+        "Auto-detect markdown in text handoffs using heuristics (headings, code blocks, lists)",
+        "Render markdown with proper formatting in expanded text view",
+        "Code blocks display with syntax highlighting and copy button",
+        "Links in markdown are clickable",
+        "Plain text falls back to current whitespace-preserved display",
+        "Toggle available to view raw source if needed"
+      ],
+      "estimatedEffort": null,
+      "status": "not-started",
+      "passes": false,
+      "verifiedAt": null,
+      "verifiedBy": null,
+      "evidenceLinks": [],
+      "blockedBy": null,
+      "lastWorkedOn": "2025-12-22T09:09:13.872929",
+      "notes": "Implementation: Use react-markdown with remark-gfm for GFM support. Add rehype-highlight for code syntax highlighting. Create isMarkdown(text) heuristic in utils/markdown.ts checking for: headings (#), code fences (```), bullet lists (- or *), numbered lists, bold/italic markers. Edge cases: Mixed content with partial markdown, very long code blocks (add scroll), nested formatting. Dependencies: None - new feature. Context: AI chatbot outputs (Claude, ChatGPT, etc.) use markdown extensively - this makes shared responses readable. Gotchas: Sanitize HTML in markdown to prevent XSS. Ensure dark theme compatible styling. Code blocks need horizontal scroll on mobile."
     }
   ],
   "metadata": {
     "createdAt": "2025-12-22T03:40:28.896801",
-    "lastUpdated": "2025-12-22T07:03:33.837191",
-    "totalFeatures": 30,
+    "lastUpdated": "2025-12-22T09:08:40.547798",
+    "totalFeatures": 31,
     "passingFeatures": 30
   }
 }

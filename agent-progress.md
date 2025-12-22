@@ -2,7 +2,7 @@
 
 ## Project: synctoy
 ## Started: 2025-12-22
-## Current Status: Session Ended
+## Current Status: In Progress
 ## PRD Source: [.\SYNCTOY.md](.\SYNCTOY.md)
 
 ---
@@ -24,6 +24,7 @@ klondike feature list  # List all features
 ### Current Priority Features
 | ID | Description | Status |
 |----|-------------|--------|
+| F031 | Markdown Rendering for Text Handoffs - detect and render markdown content from chatbots (Claude/ChatGPT style) with syntax highlighting and proper formatting | ⏳ Not started |
 
 ---
 
@@ -158,6 +159,28 @@ klondike feature list  # List all features
 
 #### In Progress
 - None
+
+#### Blockers
+- None
+
+#### Recommended Next Steps
+1. Continue implementation
+
+#### Technical Notes
+- None
+
+---
+
+### Session 7 - 2025-12-22
+**Agent**: Coding Agent
+**Duration**: (in progress)
+**Focus**: F031 - Markdown Rendering for Text Handoffs
+
+#### Completed
+- None
+
+#### In Progress
+- Session started
 
 #### Blockers
 - None

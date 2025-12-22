@@ -2,8 +2,34 @@ import Dexie, { type Table } from 'dexie';
 import dexieCloud, { type DexieCloudTable } from 'dexie-cloud-addon';
 import type { HandoffItem, DeviceProfile, PersistedStateRecord, KnownDevice } from '../../types';
 
-// Cloud configuration - fallback to environment variable for backwards compatibility
-const ENV_DEXIE_CLOUD_URL = import.meta.env.VITE_DEXIE_CLOUD_URL as string | undefined;
+// Cloud URL storage key in localStorage (must be accessible synchronously before DB opens)
+const CLOUD_URL_STORAGE_KEY = 'handoff-lite-cloud-url';
+
+// Get cloud URL from localStorage (synchronous, available before DB opens)
+function getStoredCloudUrl(): string | undefined {
+    try {
+        const url = localStorage.getItem(CLOUD_URL_STORAGE_KEY);
+        return url && url.trim() ? url.trim() : undefined;
+    } catch {
+        return undefined;
+    }
+}
+
+// Save cloud URL to localStorage
+function setStoredCloudUrl(url: string | undefined): void {
+    try {
+        if (url && url.trim()) {
+            localStorage.setItem(CLOUD_URL_STORAGE_KEY, url.trim());
+        } else {
+            localStorage.removeItem(CLOUD_URL_STORAGE_KEY);
+        }
+    } catch {
+        // Ignore storage errors
+    }
+}
+
+// Cloud configuration - check localStorage first, then env var
+const INITIAL_CLOUD_URL = getStoredCloudUrl() || (import.meta.env.VITE_DEXIE_CLOUD_URL as string | undefined);
 
 // Default device profile
 export const DEFAULT_DEVICE_PROFILE: DeviceProfile = {
@@ -16,7 +42,7 @@ export const DEFAULT_DEVICE_PROFILE: DeviceProfile = {
     rememberPassphrase: 'off',
     isSetupComplete: false,
     enableBrowserNotifications: false,
-    cloudUrl: ENV_DEXIE_CLOUD_URL, // Use env var as default if available
+    cloudUrl: INITIAL_CLOUD_URL, // Use stored or env var as default
 };
 
 // Type for cloud-enabled database
@@ -31,7 +57,7 @@ class HandoffDatabase extends Dexie {
     handoffItems!: DexieCloudTable<HandoffItem, 'id'>;
     persistedState!: Table<PersistedStateRecord, string>;
     knownDevices!: DexieCloudTable<KnownDevice, 'deviceId'>;
-    private currentCloudUrl: string | undefined = ENV_DEXIE_CLOUD_URL;
+    private currentCloudUrl: string | undefined = INITIAL_CLOUD_URL;
 
     constructor() {
         // Always add dexie-cloud-addon (can be configured later)
@@ -50,38 +76,35 @@ class HandoffDatabase extends Dexie {
             knownDevices: 'deviceId, lastSeen',
         });
 
-        // Configure cloud sync with initial URL (from env or empty)
-        this._configureCloud(this.currentCloudUrl);
-    }
-
-    private _configureCloud(cloudUrl: string | undefined) {
-        if (cloudUrl) {
+        // Configure cloud sync with URL from localStorage (available synchronously)
+        // This MUST happen before any database operations for @id to work properly
+        if (INITIAL_CLOUD_URL) {
+            console.log('[db] Configuring Dexie Cloud with URL:', INITIAL_CLOUD_URL);
             this.cloud.configure({
-                databaseUrl: cloudUrl,
-                requireAuth: true, // Require user authentication for sync
-                customLoginGui: false, // Use Dexie's built-in login UI for better reliability
-                tryUseServiceWorker: false, // Disable service worker sync (can be problematic on some hosts)
-                // Local-only tables that should not sync
-                // - persistedState: device-specific settings
-                // - knownDevices: device registry with client-provided IDs (not cloud-generated)
+                databaseUrl: INITIAL_CLOUD_URL,
+                requireAuth: true,
+                customLoginGui: false,
+                tryUseServiceWorker: false,
                 unsyncedTables: ['persistedState', 'knownDevices'],
             });
-            this.currentCloudUrl = cloudUrl;
+        } else {
+            console.log('[db] No cloud URL configured - running in local-only mode');
         }
     }
 
-    // Update cloud URL dynamically - requires page reload for full effect
+    // Update cloud URL - saves to localStorage and requires page reload
     async updateCloudUrl(cloudUrl: string | undefined): Promise<void> {
         if (this.currentCloudUrl === cloudUrl) {
             return; // No change
         }
 
-        // Configure with new URL
-        this._configureCloud(cloudUrl);
+        // Save to localStorage for next page load
+        setStoredCloudUrl(cloudUrl);
+        this.currentCloudUrl = cloudUrl;
         
-        if (!cloudUrl) {
-            this.currentCloudUrl = undefined;
-        }
+        // Note: Full effect requires page reload since cloud.configure() 
+        // should be called before database operations begin
+        console.log('[db] Cloud URL updated. Reload required for full effect.');
     }
 
     // Check if cloud sync is enabled and configured

@@ -65,7 +65,11 @@ export function Settings() {
 
         try {
             await updateDeviceProfile({ cloudUrl: trimmedUrl || undefined });
-            notify.success(trimmedUrl ? 'Cloud sync URL updated' : 'Cloud sync disabled');
+            notify.success(trimmedUrl ? 'Cloud sync URL updated - reloading...' : 'Cloud sync disabled - reloading...');
+            // Reload the page after a short delay so the notification is seen
+            setTimeout(() => {
+                window.location.reload();
+            }, 1000);
         } catch (error) {
             notify.error('Failed to update cloud URL');
         }

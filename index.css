@@ -1,0 +1,205 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* CSS Variables for viewport dimensions */
+:root {
+    --app-vh: 100vh;
+    --app-vw: 100vw;
+    --nav-height: 64px;
+    --bottom-nav-height: 64px;
+}
+
+/* Prevent overscroll bounce on iOS */
+html,
+body {
+    overscroll-behavior: none;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* Hide scrollbars but allow scrolling */
+.scrollbar-hidden {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+.scrollbar-hidden::-webkit-scrollbar {
+    display: none;
+}
+
+/* Custom scrollbar for dark theme */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+/* Glass morphism effect */
+.glass-card {
+    background: rgba(30, 41, 59, 0.85);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.glass-card-light {
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+/* Animations */
+@keyframes fadeInUp {
+    0% {
+        opacity: 0;
+        transform: translateY(16px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0px);
+    }
+}
+
+@keyframes popIn {
+    0% {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes slideInLeft {
+    0% {
+        opacity: 0;
+        transform: translateX(-100%);
+    }
+    100% {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideInRight {
+    0% {
+        opacity: 0;
+        transform: translateX(100%);
+    }
+    100% {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideInUp {
+    0% {
+        opacity: 0;
+        transform: translateY(100%);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-fade-in-up {
+    animation: fadeInUp 0.2s ease-out;
+}
+
+.animate-pop-in {
+    animation: popIn 0.15s ease-out;
+}
+
+.animate-slide-in-left {
+    animation: slideInLeft 0.3s ease-out;
+}
+
+.animate-slide-in-right {
+    animation: slideInRight 0.3s ease-out;
+}
+
+.animate-slide-in-up {
+    animation: slideInUp 0.3s ease-out;
+}
+
+/* Material Icons adjustment */
+.material-symbols-outlined {
+    font-variation-settings:
+        'FILL' 0,
+        'wght' 400,
+        'GRAD' 0,
+        'opsz' 24;
+}
+
+/* Focus visible for accessibility */
+:focus-visible {
+    outline: 2px solid #3b82f6;
+    outline-offset: 2px;
+}
+
+/* Selection color */
+::selection {
+    background: rgba(59, 130, 246, 0.3);
+}
+
+/* Status badges */
+.status-badge {
+    @apply px-2 py-0.5 text-xs font-medium rounded-full;
+}
+
+.status-new {
+    @apply bg-blue-500/20 text-blue-400;
+}
+
+.status-opened {
+    @apply bg-yellow-500/20 text-yellow-400;
+}
+
+.status-done {
+    @apply bg-green-500/20 text-green-400;
+}
+
+.status-archived {
+    @apply bg-gray-500/20 text-gray-400;
+}
+
+/* Category badges */
+.category-work {
+    @apply bg-amber-500/20 text-amber-400 border-amber-500/30;
+}
+
+.category-private {
+    @apply bg-violet-500/20 text-violet-400 border-violet-500/30;
+}
+
+.category-any {
+    @apply bg-gray-500/20 text-gray-400 border-gray-500/30;
+}
+
+/* Kind badges */
+.kind-url {
+    @apply bg-cyan-500/20 text-cyan-400;
+}
+
+.kind-text {
+    @apply bg-emerald-500/20 text-emerald-400;
+}
+
+/* Encrypted indicator */
+.encrypted-badge {
+    @apply bg-rose-500/20 text-rose-400;
+}

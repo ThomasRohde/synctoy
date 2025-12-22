@@ -24,6 +24,9 @@ klondike feature list  # List all features
 ### Current Priority Features
 | ID | Description | Status |
 |----|-------------|--------|
+| F027 | iOS Touch Target Optimization - ensure all interactive elements meet Apple 44x44pt minimum touch target guidelines | ⏳ Not started |
+| F029 | iOS Input Zoom Prevention - prevent Safari auto-zoom on input focus while maintaining accessibility | ⏳ Not started |
+| F028 | iOS Haptic Feedback - add subtle vibration feedback for key interactions like sending items and completing actions | ⏳ Not started |
 
 ---
 

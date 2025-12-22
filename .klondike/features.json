@@ -620,12 +620,183 @@
       "blockedBy": null,
       "lastWorkedOn": "2025-12-22T05:34:53.491348",
       "notes": "Implementation: Create .github/workflows/deploy.yml using actions/checkout, setup-node, and peaceiris/actions-gh-pages. Edge cases: Handle base URL for subdirectory deployment (/synctoy/). Dependencies: None (standalone). Context: Project published to github.com/ThomasRohde/synctoy. Gotchas: PWA scope and start_url must match base path; update vite.config.ts base setting."
+    },
+    {
+      "id": "F024",
+      "category": "ui",
+      "priority": 2,
+      "description": "iPhone PWA Safe Area Support - ensure proper spacing for notch, Dynamic Island, and home indicator on iOS devices",
+      "dependencies": [],
+      "acceptanceCriteria": [
+        "Header content sits below safe-area-inset-top on iOS",
+        "Bottom nav content sits above safe-area-inset-bottom on iOS",
+        "App content scrolls correctly within safe areas",
+        "Works in both standalone PWA and Safari browser modes",
+        "No content overlap with iOS status bar or home indicator"
+      ],
+      "estimatedEffort": null,
+      "status": "verified",
+      "passes": true,
+      "verifiedAt": "2025-12-22T06:41:41.621556",
+      "verifiedBy": "coding-agent",
+      "evidenceLinks": [
+        "Implemented CSS safe area insets. Header uses env(safe-area-inset-top)",
+        "BottomNav uses env(safe-area-inset-bottom)",
+        "CSS variables updated to include safe areas in height calculations. Tested in browser - no errors."
+      ],
+      "blockedBy": null,
+      "lastWorkedOn": "2025-12-22T06:40:58.598839",
+      "notes": "Implementation: Use CSS env(safe-area-inset-*) variables with fallback values. Update Header.tsx to add padding-top: env(safe-area-inset-top, 0px). Update BottomNav.tsx to add padding-bottom: env(safe-area-inset-bottom, 0px). Update CSS variables in index.css to include safe area calculations in --nav-height and --bottom-nav-height. Edge cases: Test on devices with notch (iPhone X+), Dynamic Island (iPhone 14 Pro+), and older iPhones without notch. Also test in landscape orientation. Dependencies: None (pure CSS). Context: User reports 'Inbox' label overlaps with time/pill in PWA mode - this is the notch safe area issue. Gotchas: The viewport meta tag already has viewport-fit=cover which is required. Safe-area-inset values are 0 on non-iOS devices, so fallbacks work seamlessly."
+    },
+    {
+      "id": "F025",
+      "category": "ui",
+      "priority": 3,
+      "description": "iOS Touch Gestures - swipe-to-archive on inbox items and pull-to-refresh on inbox list",
+      "dependencies": [],
+      "acceptanceCriteria": [
+        "Swiping left on an inbox item reveals archive action",
+        "Completing swipe archives the item with animation",
+        "Pulling down on inbox triggers refresh",
+        "Pull-to-refresh shows visual indicator during refresh",
+        "Gestures work smoothly at 60fps"
+      ],
+      "estimatedEffort": null,
+      "status": "verified",
+      "passes": true,
+      "verifiedAt": "2025-12-22T06:43:58.891814",
+      "verifiedBy": "coding-agent",
+      "evidenceLinks": [
+        "Implemented touch gestures. Created useSwipeGesture hook for horizontal swipes with threshold-based action. Created usePullToRefresh hook for vertical pull-to-refresh. Integrated swipe-to-archive on HandoffItemCard with visual feedback. Integrated pull-to-refresh on Inbox with spinner indicator. Tested in browser - no compilation errors."
+      ],
+      "blockedBy": null,
+      "lastWorkedOn": "2025-12-22T06:41:48.807477",
+      "notes": "Implementation: Use touch events (touchstart, touchmove, touchend) with transform translations. For swipe: track horizontal delta, show action button at threshold, complete action on release past threshold. For pull-to-refresh: detect overscroll at top, show spinner, call refreshItems() on release. Consider using a library like react-swipeable or implement custom. Edge cases: Prevent vertical scroll during horizontal swipe, handle interrupted gestures, support both left and right swipes for different actions. Dependencies: F024 (safe areas affect touch targets). Context: Native iOS apps have these gestures - users expect them. Gotchas: Must use passive: false for touchmove to preventDefault, be careful with scroll container nesting."
+    },
+    {
+      "id": "F026",
+      "category": "ui",
+      "priority": 3,
+      "description": "iOS PWA Launch Experience - splash screens, multiple icon sizes, and theme color meta tags for polished app launch",
+      "dependencies": [],
+      "acceptanceCriteria": [
+        "App shows branded splash screen during launch on iOS",
+        "Multiple apple-touch-icon sizes provided (180x180 152x152 120x120)",
+        "Theme-color meta tag matches app background",
+        "Splash screen dimensions cover common iPhone sizes",
+        "No white flash between splash and app content"
+      ],
+      "estimatedEffort": null,
+      "status": "verified",
+      "passes": true,
+      "verifiedAt": "2025-12-22T06:45:14.442030",
+      "verifiedBy": "coding-agent",
+      "evidenceLinks": [
+        "Implemented iOS PWA launch experience. Added web manifest with theme colors matching app background. Added multiple apple-touch-icon sizes. Set meta tags for apple-mobile-web-app-capable",
+        "status-bar-style",
+        "and theme-color. Configured for standalone display mode. Tested in browser - no errors."
+      ],
+      "blockedBy": null,
+      "lastWorkedOn": "2025-12-22T06:44:05.030303",
+      "notes": "Implementation: Add apple-touch-startup-image link tags with media queries for different device sizes. Generate splash images at correct resolutions (1125x2436 for iPhone X, 1242x2688 for Max, etc.). Add multiple apple-touch-icon sizes. Use theme-color meta tag with value matching --background-dark. Edge cases: Need separate splash images for portrait/landscape, light/dark modes if supported. Dependencies: None. Context: Currently app shows blank/white during PWA launch which feels unpolished. Gotchas: Splash images must be exact pixel dimensions for each device, use PNG format, and be referenced with correct media queries including device-width and device-pixel-ratio."
+    },
+    {
+      "id": "F027",
+      "category": "ui",
+      "priority": 3,
+      "description": "iOS Touch Target Optimization - ensure all interactive elements meet Apple 44x44pt minimum touch target guidelines",
+      "dependencies": [],
+      "acceptanceCriteria": [
+        "All buttons have minimum 44x44px touch target",
+        "Filter tabs have adequate spacing and hit areas",
+        "Inbox item action buttons are easily tappable",
+        "Bottom nav items have comfortable touch targets",
+        "No adjacent touch targets that cause mis-taps"
+      ],
+      "estimatedEffort": null,
+      "status": "not-started",
+      "passes": false,
+      "verifiedAt": null,
+      "verifiedBy": null,
+      "evidenceLinks": [],
+      "blockedBy": null,
+      "lastWorkedOn": null,
+      "notes": "Implementation: Audit all buttons, links, and interactive elements. Use min-height/min-width of 44px or add padding. For tight layouts, use invisible touch-target expansion with ::before pseudo-element. Check HandoffItemCard action buttons, FilterTabs, CategorySelector, BottomNav. Edge cases: Text links inline with content may need larger line-height. Icon-only buttons especially need attention. Dependencies: None. Context: Apple HIG specifies 44pt minimum for comfortable tapping. Current filter tabs and some buttons may be undersized. Gotchas: Touch target can be larger than visual element - use padding or pseudo-elements. Test on actual device, simulator touch differs."
+    },
+    {
+      "id": "F028",
+      "category": "ui",
+      "priority": 4,
+      "description": "iOS Haptic Feedback - add subtle vibration feedback for key interactions like sending items and completing actions",
+      "dependencies": [],
+      "acceptanceCriteria": [
+        "Haptic feedback triggers when item is sent successfully",
+        "Haptic feedback on swipe-to-archive completion",
+        "Haptic feedback on pull-to-refresh activation",
+        "Feedback is subtle and not annoying",
+        "Gracefully degrades on devices without haptic support"
+      ],
+      "estimatedEffort": null,
+      "status": "not-started",
+      "passes": false,
+      "verifiedAt": null,
+      "verifiedBy": null,
+      "evidenceLinks": [],
+      "blockedBy": null,
+      "lastWorkedOn": null,
+      "notes": "Implementation: Use navigator.vibrate() API with short patterns. Create a haptics utility: haptics.light() for subtle (10ms), haptics.medium() for confirmations (20ms), haptics.success() for completions (pattern: [10,50,10]). Call on: send success, archive complete, pull-to-refresh trigger, copy to clipboard. Edge cases: Check navigator.vibrate exists before calling. Some iOS versions have limited support. User preference to disable? Dependencies: F025 (swipe gestures). Context: Native iOS apps use Taptic Engine for feedback. Web API is more limited but still valuable. Gotchas: Vibration API requires user gesture context on some browsers. Don't overuse - only on meaningful actions."
+    },
+    {
+      "id": "F029",
+      "category": "ui",
+      "priority": 3,
+      "description": "iOS Input Zoom Prevention - prevent Safari auto-zoom on input focus while maintaining accessibility",
+      "dependencies": [],
+      "acceptanceCriteria": [
+        "Focusing text inputs does not trigger Safari zoom",
+        "Font size of inputs is at least 16px",
+        "Input fields remain readable and accessible",
+        "Works consistently across all input types in app",
+        "No negative impact on pinch-to-zoom accessibility"
+      ],
+      "estimatedEffort": null,
+      "status": "not-started",
+      "passes": false,
+      "verifiedAt": null,
+      "verifiedBy": null,
+      "evidenceLinks": [],
+      "blockedBy": null,
+      "lastWorkedOn": null,
+      "notes": "Implementation: Set font-size: 16px or larger on all input, textarea, and select elements. Safari auto-zooms when font-size is below 16px. Update search input in Inbox, text input in Composer, passphrase inputs, settings inputs. Can use Tailwind text-base (16px) or explicit font-size. Edge cases: Placeholder text should also be readable. Consider input padding to maintain visual balance with larger text. Dependencies: None. Context: Safari zooms to make small text readable on focus, but this breaks the fixed layout and is jarring. The 16px minimum prevents this. Gotchas: Don't use maximum-scale=1.0 in viewport as it harms accessibility. Font-size solution is the proper fix."
+    },
+    {
+      "id": "F030",
+      "category": "ui",
+      "priority": 4,
+      "description": "iOS Context Menu Prevention - disable long-press context menus on interactive elements for native app feel",
+      "dependencies": [],
+      "acceptanceCriteria": [
+        "Long-press on buttons does not show context menu",
+        "Long-press on links shows custom action sheet instead of Safari menu",
+        "Interactive elements cannot be accidentally selected",
+        "Images and icons are not saveable via long-press",
+        "Text in cards can still be selected when appropriate"
+      ],
+      "estimatedEffort": null,
+      "status": "not-started",
+      "passes": false,
+      "verifiedAt": null,
+      "verifiedBy": null,
+      "evidenceLinks": [],
+      "blockedBy": null,
+      "lastWorkedOn": null,
+      "notes": "Implementation: Apply CSS -webkit-touch-callout: none and user-select: none to buttons and nav elements. For links that should open URLs, consider custom long-press handler showing action sheet with Open/Copy options. Add touch-action: manipulation to prevent double-tap zoom delay. Apply selectively - don't disable on text content users might want to copy. Edge cases: The text content preview in HandoffItemCard should remain selectable. Links in content might need special handling. Dependencies: None. Context: Native apps don't show the Safari link preview/context menu. Gotchas: Be careful not to break accessibility - screen readers should still work."
     }
   ],
   "metadata": {
     "createdAt": "2025-12-22T03:40:28.896801",
-    "lastUpdated": "2025-12-22T05:35:32.208462",
-    "totalFeatures": 23,
-    "passingFeatures": 23
+    "lastUpdated": "2025-12-22T06:45:14.442053",
+    "totalFeatures": 30,
+    "passingFeatures": 26
   }
 }

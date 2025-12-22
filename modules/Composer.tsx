@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useApp, useNotification, useDb } from '../context';
 import { useClipboard } from '../hooks';
 import { Header, CategorySelector, LoadingSpinner } from '../components';
-import { isValidUrl, detectContentKind, getUrlPreview, getTextPreview } from '../utils/url';
+import { isValidUrl, detectContentKind, getUrlPreview, getTextPreview, haptics } from '../utils';
 import { encryptContent } from '../utils/crypto';
 import type { DeviceCategory, PlainContent } from '../types';
 
@@ -144,10 +144,12 @@ export function Composer() {
             clearSharePayload();
             refreshItems();
 
+            haptics.success();
             notify.success('Sent successfully!');
             navigate('inbox');
         } catch (error) {
             console.error('Failed to send:', error);
+            haptics.error();
             notify.error('Failed to send. Please try again.');
         } finally {
             setIsSending(false);

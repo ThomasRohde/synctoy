@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import type { HandoffItem, PlainContent } from '../types';
 import { useApp, useNotification, useDb } from '../context';
 import { useClipboard, useSwipeGesture } from '../hooks';
-import { decryptContent } from '../utils/crypto';
+import { decryptContent, haptics } from '../utils';
 import { getUrlPreview, getTextPreview, getDomain, getFaviconUrl } from '../utils/url';
 
 interface HandoffItemCardProps {
@@ -28,6 +28,7 @@ export function HandoffItemCard({ item, onStatusChange }: HandoffItemCardProps) 
     const handleArchive = async () => {
         await db.updateItemStatus(item.id, 'archived');
         onStatusChange?.();
+        haptics.impact();
         notify.success('Archived');
     };
 
@@ -119,6 +120,7 @@ export function HandoffItemCard({ item, onStatusChange }: HandoffItemCardProps) 
         if (textToCopy) {
             const success = await copy(textToCopy);
             if (success) {
+                haptics.light();
                 notify.success('Copied to clipboard');
             }
         }
@@ -127,12 +129,14 @@ export function HandoffItemCard({ item, onStatusChange }: HandoffItemCardProps) 
     const handleMarkDone = async () => {
         await db.updateItemStatus(item.id, 'done');
         onStatusChange?.();
+        haptics.success();
         notify.success('Marked as done');
     };
 
     const handleUnarchive = async () => {
         await db.updateItemStatus(item.id, 'done');
         onStatusChange?.();
+        haptics.medium();
         notify.success('Unarchived');
     };
 

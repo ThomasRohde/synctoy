@@ -1,4 +1,5 @@
 import { useRef, useState, useCallback, useEffect } from 'react';
+import { haptics } from '../utils';
 
 interface PullToRefreshOptions {
     onRefresh: () => Promise<void> | void;
@@ -97,6 +98,8 @@ export function usePullToRefresh({
                 isPulling: false,
                 isRefreshing: true,
             }));
+
+            haptics.impact();
 
             try {
                 await onRefresh();

@@ -111,14 +111,9 @@
     ],
     "priorityFeatures": [
       {
-        "id": "F029",
-        "description": "iOS Input Zoom Prevention - prevent Safari auto-zoom on input focus while maintaining accessibility",
-        "status": "in-progress"
-      },
-      {
         "id": "F028",
         "description": "iOS Haptic Feedback - add subtle vibration feedback for key interactions like sending items and completing actions",
-        "status": "not-started"
+        "status": "in-progress"
       },
       {
         "id": "F030",

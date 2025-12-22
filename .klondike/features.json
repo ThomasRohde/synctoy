@@ -749,13 +749,13 @@
         "Gracefully degrades on devices without haptic support"
       ],
       "estimatedEffort": null,
-      "status": "not-started",
+      "status": "in-progress",
       "passes": false,
       "verifiedAt": null,
       "verifiedBy": null,
       "evidenceLinks": [],
       "blockedBy": null,
-      "lastWorkedOn": null,
+      "lastWorkedOn": "2025-12-22T06:56:57.015892",
       "notes": "Implementation: Use navigator.vibrate() API with short patterns. Create a haptics utility: haptics.light() for subtle (10ms), haptics.medium() for confirmations (20ms), haptics.success() for completions (pattern: [10,50,10]). Call on: send success, archive complete, pull-to-refresh trigger, copy to clipboard. Edge cases: Check navigator.vibrate exists before calling. Some iOS versions have limited support. User preference to disable? Dependencies: F025 (swipe gestures). Context: Native iOS apps use Taptic Engine for feedback. Web API is more limited but still valuable. Gotchas: Vibration API requires user gesture context on some browsers. Don't overuse - only on meaningful actions."
     },
     {
@@ -772,11 +772,16 @@
         "No negative impact on pinch-to-zoom accessibility"
       ],
       "estimatedEffort": null,
-      "status": "in-progress",
-      "passes": false,
-      "verifiedAt": null,
-      "verifiedBy": null,
-      "evidenceLinks": [],
+      "status": "verified",
+      "passes": true,
+      "verifiedAt": "2025-12-22T06:56:47.108769",
+      "verifiedBy": "coding-agent",
+      "evidenceLinks": [
+        "Added global CSS rule setting font-size: 16px for all input",
+        "textarea",
+        "and select elements. Removed explicit text-sm (14px) classes from inputs in HandoffItemCard and Settings. Safari auto-zoom only triggers when font-size is below 16px",
+        "so this prevents the zoom while maintaining accessibility. Build successful. Solution follows iOS best practices by using font-size approach rather than viewport maximum-scale which would harm accessibility."
+      ],
       "blockedBy": null,
       "lastWorkedOn": "2025-12-22T06:55:08.706980",
       "notes": "Implementation: Set font-size: 16px or larger on all input, textarea, and select elements. Safari auto-zooms when font-size is below 16px. Update search input in Inbox, text input in Composer, passphrase inputs, settings inputs. Can use Tailwind text-base (16px) or explicit font-size. Edge cases: Placeholder text should also be readable. Consider input padding to maintain visual balance with larger text. Dependencies: None. Context: Safari zooms to make small text readable on focus, but this breaks the fixed layout and is jarring. The 16px minimum prevents this. Gotchas: Don't use maximum-scale=1.0 in viewport as it harms accessibility. Font-size solution is the proper fix."
@@ -807,8 +812,8 @@
   ],
   "metadata": {
     "createdAt": "2025-12-22T03:40:28.896801",
-    "lastUpdated": "2025-12-22T06:54:55.822714",
+    "lastUpdated": "2025-12-22T06:56:47.108789",
     "totalFeatures": 30,
-    "passingFeatures": 27
+    "passingFeatures": 28
   }
 }

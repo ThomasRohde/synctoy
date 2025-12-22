@@ -56,7 +56,7 @@ export function Header({ title, subtitle, showBack, onBack, actions, showSyncSta
                     {showBack && (
                         <button
                             onClick={handleBack}
-                            className="p-2 -ml-2 rounded-lg hover:bg-white/10 transition-colors"
+                            className="p-2.5 -ml-2 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-lg hover:bg-white/10 transition-colors"
                         >
                             <span className="material-symbols-outlined">arrow_back</span>
                         </button>

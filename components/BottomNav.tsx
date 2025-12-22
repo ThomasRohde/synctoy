@@ -33,7 +33,7 @@ export function BottomNav() {
                             onClick={() => navigate(item.id)}
                             className={`
                                 flex flex-col items-center justify-center
-                                w-20 h-full
+                                w-20 h-full min-h-[44px]
                                 transition-colors duration-150
                                 ${isActive ? 'text-primary' : 'text-gray-400 hover:text-white'}
                             `}

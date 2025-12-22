@@ -26,7 +26,7 @@ export function CategorySelector({ value, onChange, label }: CategorySelectorPro
                             key={cat.id}
                             onClick={() => onChange(cat.id)}
                             className={`
-                                flex items-center gap-2 px-4 py-2 rounded-lg border
+                                flex items-center gap-2 px-4 py-2.5 min-h-[44px] rounded-lg border
                                 transition-all duration-150
                                 ${isActive
                                     ? `${cat.color} border-current`

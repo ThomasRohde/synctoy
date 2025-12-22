@@ -288,7 +288,7 @@ export function HandoffItemCard({ item, onStatusChange }: HandoffItemCardProps) 
                             <button
                                 onClick={() => handleDecrypt(passphraseInput)}
                                 disabled={isDecrypting || !passphraseInput}
-                                className="px-4 py-2 bg-primary rounded-lg text-sm font-medium disabled:opacity-50"
+                                className="px-4 py-2.5 min-h-[44px] bg-primary rounded-lg text-sm font-medium disabled:opacity-50"
                             >
                                 {isDecrypting ? 'Decrypting...' : 'Unlock'}
                             </button>
@@ -300,7 +300,7 @@ export function HandoffItemCard({ item, onStatusChange }: HandoffItemCardProps) 
                 <div className="flex items-center gap-2">
                     <button
                         onClick={handleOpen}
-                        className="flex items-center gap-1.5 px-3 py-1.5 bg-primary/20 hover:bg-primary/30 text-primary rounded-lg text-sm transition-colors"
+                        className="flex items-center gap-1.5 px-3 py-2.5 min-h-[44px] bg-primary/20 hover:bg-primary/30 text-primary rounded-lg text-sm transition-colors"
                     >
                         <span className="material-symbols-outlined text-lg">
                             {item.kind === 'url' ? 'open_in_new' : 'visibility'}
@@ -310,7 +310,7 @@ export function HandoffItemCard({ item, onStatusChange }: HandoffItemCardProps) 
 
                     <button
                         onClick={handleCopy}
-                        className="flex items-center gap-1.5 px-3 py-1.5 bg-white/10 hover:bg-white/20 rounded-lg text-sm transition-colors"
+                        className="flex items-center gap-1.5 px-3 py-2.5 min-h-[44px] bg-white/10 hover:bg-white/20 rounded-lg text-sm transition-colors"
                     >
                         <span className="material-symbols-outlined text-lg">content_copy</span>
                         Copy
@@ -319,7 +319,7 @@ export function HandoffItemCard({ item, onStatusChange }: HandoffItemCardProps) 
                     {item.status !== 'done' && item.status !== 'archived' && (
                         <button
                             onClick={handleMarkDone}
-                            className="flex items-center gap-1.5 px-3 py-1.5 bg-green-500/20 hover:bg-green-500/30 text-green-400 rounded-lg text-sm transition-colors"
+                            className="flex items-center gap-1.5 px-3 py-2.5 min-h-[44px] bg-green-500/20 hover:bg-green-500/30 text-green-400 rounded-lg text-sm transition-colors"
                         >
                             <span className="material-symbols-outlined text-lg">check</span>
                             Done
@@ -329,7 +329,7 @@ export function HandoffItemCard({ item, onStatusChange }: HandoffItemCardProps) 
                     {item.status !== 'archived' ? (
                         <button
                             onClick={handleArchive}
-                            className="p-1.5 bg-white/10 hover:bg-white/20 rounded-lg transition-colors"
+                            className="p-2.5 min-w-[44px] min-h-[44px] flex items-center justify-center bg-white/10 hover:bg-white/20 rounded-lg transition-colors"
                             title="Archive"
                         >
                             <span className="material-symbols-outlined text-lg">archive</span>
@@ -337,7 +337,7 @@ export function HandoffItemCard({ item, onStatusChange }: HandoffItemCardProps) 
                     ) : (
                         <button
                             onClick={handleUnarchive}
-                            className="p-1.5 bg-white/10 hover:bg-white/20 rounded-lg transition-colors"
+                            className="p-2.5 min-w-[44px] min-h-[44px] flex items-center justify-center bg-white/10 hover:bg-white/20 rounded-lg transition-colors"
                             title="Unarchive"
                         >
                             <span className="material-symbols-outlined text-lg">unarchive</span>

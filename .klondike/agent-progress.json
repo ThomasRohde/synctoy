@@ -113,7 +113,7 @@
       {
         "id": "F027",
         "description": "iOS Touch Target Optimization - ensure all interactive elements meet Apple 44x44pt minimum touch target guidelines",
-        "status": "not-started"
+        "status": "in-progress"
       },
       {
         "id": "F029",

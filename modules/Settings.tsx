@@ -143,7 +143,7 @@ export function Settings() {
                                         key={section.id}
                                         onClick={() => setActiveSection(section.id)}
                                         className={`
-                                            w-full flex items-center gap-3 px-3 py-2 rounded-lg text-left
+                                            w-full flex items-center gap-3 px-3 py-2.5 min-h-[44px] rounded-lg text-left
                                             transition-colors duration-150
                                             ${activeSection === section.id
                                                 ? 'bg-primary/20 text-primary'
@@ -168,7 +168,7 @@ export function Settings() {
                                         key={section.id}
                                         onClick={() => setActiveSection(section.id)}
                                         className={`
-                                            flex items-center gap-2 px-3 py-2 rounded-md text-sm
+                                            flex items-center gap-2 px-3 py-2.5 min-h-[44px] rounded-md text-sm
                                             ${activeSection === section.id
                                                 ? 'bg-primary text-white'
                                                 : 'text-gray-400'
@@ -422,7 +422,7 @@ export function Settings() {
                                                 </div>
                                                 <button
                                                     onClick={handleLogout}
-                                                    className="w-full px-4 py-2 bg-red-500/20 text-red-400 rounded-lg hover:bg-red-500/30 transition-colors"
+                                                    className="w-full px-4 py-2.5 min-h-[44px] bg-red-500/20 text-red-400 rounded-lg hover:bg-red-500/30 transition-colors"
                                                 >
                                                     Logout
                                                 </button>
@@ -497,7 +497,7 @@ export function Settings() {
                                     </p>
                                     <button
                                         onClick={handleRunRetention}
-                                        className="px-4 py-2 bg-primary/20 text-primary rounded-lg hover:bg-primary/30 transition-colors"
+                                        className="px-4 py-2.5 min-h-[44px] bg-primary/20 text-primary rounded-lg hover:bg-primary/30 transition-colors"
                                     >
                                         Run Cleanup
                                     </button>
@@ -514,7 +514,7 @@ export function Settings() {
                                     <button
                                         onClick={handleClearArchived}
                                         disabled={isClearingArchived}
-                                        className="px-4 py-2 bg-red-500/20 text-red-400 rounded-lg hover:bg-red-500/30 transition-colors disabled:opacity-50"
+                                        className="px-4 py-2.5 min-h-[44px] bg-red-500/20 text-red-400 rounded-lg hover:bg-red-500/30 transition-colors disabled:opacity-50"
                                     >
                                         {isClearingArchived ? 'Clearing...' : 'Clear Archived'}
                                     </button>

@@ -72,7 +72,7 @@ export function Setup() {
                         </p>
                         <button
                             onClick={() => setStep('device')}
-                            className="w-full py-4 bg-primary hover:bg-primary-dark rounded-xl font-medium text-lg transition-colors"
+                            className="w-full py-4 min-h-[44px] bg-primary hover:bg-primary-dark rounded-xl font-medium text-lg transition-colors"
                         >
                             Get Started
                         </button>
@@ -122,13 +122,13 @@ export function Setup() {
                         <div className="flex gap-3 mt-8">
                             <button
                                 onClick={() => setStep('welcome')}
-                                className="flex-1 py-3 bg-white/10 hover:bg-white/20 rounded-xl font-medium transition-colors"
+                                className="flex-1 py-3 min-h-[44px] bg-white/10 hover:bg-white/20 rounded-xl font-medium transition-colors"
                             >
                                 Back
                             </button>
                             <button
                                 onClick={() => setStep('preferences')}
-                                className="flex-1 py-3 bg-primary hover:bg-primary-dark rounded-xl font-medium transition-colors"
+                                className="flex-1 py-3 min-h-[44px] bg-primary hover:bg-primary-dark rounded-xl font-medium transition-colors"
                             >
                                 Next
                             </button>
@@ -205,14 +205,14 @@ export function Setup() {
                         <div className="flex gap-3 mt-8">
                             <button
                                 onClick={() => setStep('device')}
-                                className="flex-1 py-3 bg-white/10 hover:bg-white/20 rounded-xl font-medium transition-colors"
+                                className="flex-1 py-3 min-h-[44px] bg-white/10 hover:bg-white/20 rounded-xl font-medium transition-colors"
                             >
                                 Back
                             </button>
                             <button
                                 onClick={handleComplete}
                                 disabled={isCompleting}
-                                className="flex-1 py-3 bg-primary hover:bg-primary-dark rounded-xl font-medium transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
+                                className="flex-1 py-3 min-h-[44px] bg-primary hover:bg-primary-dark rounded-xl font-medium transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
                             >
                                 {isCompleting ? (
                                     <LoadingSpinner size="sm" />

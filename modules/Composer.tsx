@@ -166,7 +166,7 @@ export function Composer() {
                     {/* Quick paste button */}
                     <button
                         onClick={handlePasteAndSend}
-                        className="w-full flex items-center justify-center gap-3 px-6 py-4 bg-primary/20 hover:bg-primary/30 border-2 border-dashed border-primary/50 rounded-xl transition-colors"
+                        className="w-full flex items-center justify-center gap-3 px-6 py-4 min-h-[44px] bg-primary/20 hover:bg-primary/30 border-2 border-dashed border-primary/50 rounded-xl transition-colors"
                     >
                         <span className="material-symbols-outlined text-2xl text-primary">
                             content_paste
@@ -271,7 +271,7 @@ export function Composer() {
                     <button
                         onClick={handleSend}
                         disabled={isSending || !content.trim() || !!isWorkModeViolation}
-                        className="w-full flex items-center justify-center gap-3 px-6 py-4 bg-primary hover:bg-primary-dark rounded-xl font-medium text-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="w-full flex items-center justify-center gap-3 px-6 py-4 min-h-[44px] bg-primary hover:bg-primary-dark rounded-xl font-medium text-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                         {isSending ? (
                             <LoadingSpinner size="sm" />

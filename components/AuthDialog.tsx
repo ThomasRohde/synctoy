@@ -67,7 +67,7 @@ export function AuthDialog({ interaction }: AuthDialogProps) {
 
                     <button
                         onClick={handleCancel}
-                        className="w-full px-4 py-2 bg-primary rounded-lg hover:bg-primary/80 transition-colors"
+                        className="w-full px-4 py-2.5 min-h-[44px] bg-primary rounded-lg hover:bg-primary/80 transition-colors"
                     >
                         {interaction.cancelLabel || 'OK'}
                     </button>
@@ -101,14 +101,14 @@ export function AuthDialog({ interaction }: AuthDialogProps) {
                     <div className="flex gap-3">
                         <button
                             onClick={handleCancel}
-                            className="flex-1 px-4 py-2 bg-white/10 rounded-lg hover:bg-white/20 transition-colors"
+                            className="flex-1 px-4 py-2.5 min-h-[44px] bg-white/10 rounded-lg hover:bg-white/20 transition-colors"
                         >
                             {interaction.cancelLabel || 'Cancel'}
                         </button>
                         <button
                             onClick={handleSubmit}
                             disabled={isSubmitting}
-                            className="flex-1 px-4 py-2 bg-red-500 rounded-lg hover:bg-red-600 transition-colors disabled:opacity-50"
+                            className="flex-1 px-4 py-2.5 min-h-[44px] bg-red-500 rounded-lg hover:bg-red-600 transition-colors disabled:opacity-50"
                         >
                             {isSubmitting ? 'Logging out...' : (interaction.submitLabel || 'Logout')}
                         </button>
@@ -168,14 +168,14 @@ export function AuthDialog({ interaction }: AuthDialogProps) {
                     <button
                         type="button"
                         onClick={handleCancel}
-                        className="flex-1 px-4 py-2 bg-white/10 rounded-lg hover:bg-white/20 transition-colors"
+                        className="flex-1 px-4 py-2.5 min-h-[44px] bg-white/10 rounded-lg hover:bg-white/20 transition-colors"
                     >
                         {interaction.cancelLabel || 'Cancel'}
                     </button>
                     <button
                         type="submit"
                         disabled={isSubmitting}
-                        className="flex-1 px-4 py-2 bg-primary rounded-lg hover:bg-primary/80 transition-colors disabled:opacity-50"
+                        className="flex-1 px-4 py-2.5 min-h-[44px] bg-primary rounded-lg hover:bg-primary/80 transition-colors disabled:opacity-50"
                     >
                         {isSubmitting ? 'Submitting...' : (interaction.submitLabel || 'Submit')}
                     </button>

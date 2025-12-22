@@ -30,7 +30,7 @@ export function FilterTabs({ value, onChange, counts }: FilterTabsProps) {
                         key={filter.id}
                         onClick={() => onChange(filter.id)}
                         className={`
-                            flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm font-medium
+                            flex items-center gap-1.5 px-3 py-2.5 min-h-[44px] rounded-md text-sm font-medium
                             transition-colors duration-150
                             ${isActive
                                 ? 'bg-primary text-white'

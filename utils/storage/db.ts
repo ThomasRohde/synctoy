@@ -181,7 +181,7 @@ class HandoffDatabase extends Dexie {
 
     // Initialize device with unique ID if not set
     async initializeDevice(): Promise<DeviceProfile> {
-        let profile = await this.getDeviceProfile();
+        const profile = await this.getDeviceProfile();
         // Device ID comes from localStorage, never changes
         profile.deviceId = getStoredDeviceId();
         // Also ensure isSetupComplete is in sync with localStorage
@@ -243,7 +243,7 @@ class HandoffDatabase extends Dexie {
         deviceCategory?: DeviceProfile['category'],
         deviceId?: string
     ): Promise<HandoffItem[]> {
-        let collection = this.handoffItems.orderBy('createdAt').reverse();
+        const collection = this.handoffItems.orderBy('createdAt').reverse();
 
         const items = await collection.toArray();
 

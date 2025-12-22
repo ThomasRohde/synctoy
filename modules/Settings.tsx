@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useApp, useNotification, useDb } from '../context';
 import { Header, CategorySelector } from '../components';
 import { useSyncState, useCurrentUser, type SyncStatus } from '../hooks';
+import { cloudDb } from '../utils/storage/db';
 import type { DeviceCategory } from '../types';
 
 // Helper to get sync status display info
@@ -17,6 +18,8 @@ function getSyncStatusInfo(status: SyncStatus): { color: string; label: string; 
             return { color: 'bg-blue-500', label: 'Syncing...', icon: 'sync' };
         case 'disconnected':
             return { color: 'bg-orange-500', label: 'Disconnected', icon: 'cloud_off' };
+        case 'offline':
+            return { color: 'bg-amber-500', label: 'Offline', icon: 'wifi_off' };
         case 'error':
             return { color: 'bg-red-500', label: 'Sync error', icon: 'cloud_off' };
         default:
@@ -70,19 +73,29 @@ export function Settings() {
 
     const handleLogin = async () => {
         try {
-            // Trigger login by attempting to sync
-            await db.cloud.sync({ wait: false });
-        } catch (error) {
-            notify.error('Failed to initiate login');
+            // Check if cloud is properly configured
+            if (!cloudDb.cloud.options?.databaseUrl) {
+                notify.error('Cloud sync not configured. Try refreshing the page.');
+                return;
+            }
+            // Trigger login flow - this will prompt for email via userInteraction
+            await cloudDb.cloud.login();
+        } catch (error: any) {
+            console.error('Login error:', error);
+            // Don't show error if user cancelled
+            if (error?.name !== 'AbortError') {
+                notify.error('Failed to initiate login: ' + (error?.message || 'Unknown error'));
+            }
         }
     };
 
     const handleLogout = async () => {
         try {
-            await db.cloud.logout();
+            await cloudDb.cloud.logout();
             notify.success('Logged out successfully');
-        } catch (error) {
-            notify.error('Failed to logout');
+        } catch (error: any) {
+            console.error('Logout error:', error);
+            notify.error('Failed to logout: ' + (error?.message || 'Unknown error'));
         }
     };
 

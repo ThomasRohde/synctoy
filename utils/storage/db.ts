@@ -65,29 +65,27 @@ class HandoffDatabase extends Dexie {
                 // Local-only tables that should not sync (device profile is device-specific)
                 unsyncedTables: ['persistedState'],
             });
+            this.currentCloudUrl = cloudUrl;
         }
     }
 
-    // Update cloud URL dynamically
+    // Update cloud URL dynamically - requires page reload for full effect
     async updateCloudUrl(cloudUrl: string | undefined): Promise<void> {
         if (this.currentCloudUrl === cloudUrl) {
             return; // No change
         }
 
-        this.currentCloudUrl = cloudUrl;
-        
-        // Disconnect from current cloud if connected
-        if (this.cloud.currentUserId) {
-            await this.cloud.logout();
-        }
-
-        // Reconfigure with new URL
+        // Configure with new URL
         this._configureCloud(cloudUrl);
+        
+        if (!cloudUrl) {
+            this.currentCloudUrl = undefined;
+        }
     }
 
-    // Check if cloud sync is enabled
+    // Check if cloud sync is enabled and configured
     get isCloudEnabled(): boolean {
-        return !!this.currentCloudUrl;
+        return !!this.currentCloudUrl && !!this.cloud.options?.databaseUrl;
     }
 
     // Get current cloud URL

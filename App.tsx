@@ -5,7 +5,7 @@ import {
     AppProvider,
     useApp,
 } from './context';
-import { NotificationToast, BottomNav, LoadingSpinner, AuthDialog, UpdatePrompt } from './components';
+import { NotificationToast, BottomNav, LoadingSpinner, AuthDialog, UpdatePrompt, ShareReceiver } from './components';
 import { Inbox, Composer, Settings, Setup } from './modules';
 import { useViewportCssVars, useBrowserNotifications, useAuthInteraction, useServiceWorker } from './hooks';
 
@@ -55,6 +55,7 @@ function AppContent() {
 
     return (
         <div className="min-h-[var(--app-vh)] bg-background-dark text-white">
+            <ShareReceiver />
             <RouteRenderer />
             <NotificationToast />
             {authInteraction && <AuthDialog interaction={authInteraction} />}

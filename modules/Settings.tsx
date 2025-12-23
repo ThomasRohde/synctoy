@@ -694,36 +694,36 @@ TOKEN="$(curl -s "$DB_URL/token" \\
                                                 <div className="space-y-3">
                                                     <h4 className="text-sm font-medium">Step 2: Insert Items</h4>
                                                     <p className="text-sm text-gray-400">
-                                                        POST items to <code className="text-xs bg-black/20 px-1 py-0.5 rounded">/my/handoffItems</code>. The <code className="text-xs bg-black/20 px-1 py-0.5 rounded">/my/</code> endpoint defaults to your user's realm, so no realmId is needed.
+                                                        POST items to <code className="text-xs bg-black/20 px-1 py-0.5 rounded">/all/handoffItems</code> with <code className="text-xs bg-black/20 px-1 py-0.5 rounded">realmId</code> and <code className="text-xs bg-black/20 px-1 py-0.5 rounded">owner</code> set to the target user's email.
                                                     </p>
 
                                                     <div className="space-y-2">
                                                         <h5 className="text-xs font-medium text-gray-300">URL Item Example:</h5>
                                                         <div className="relative">
-                                                            <pre className="text-xs bg-black/40 p-3 rounded-lg overflow-x-auto border border-white/10 text-gray-300">{`curl -s "$DB_URL/my/handoffItems" \\
+                                                            <pre className="text-xs bg-black/40 p-3 rounded-lg overflow-x-auto border border-white/10 text-gray-300">{`USER_EMAIL="${currentUser?.email || '<your-email>'}"
+
+curl -s "$DB_URL/all/handoffItems" \\
   -H "Authorization: Bearer $TOKEN" \\
   -H "Content-Type: application/json" \\
-  -d '[
-    {
-      "kind": "url",
-      "status": "new",
-      "content": {
-        "url": "https://example.com"
-      },
-      "title": "Example Website",
-      "preview": "Check out this link",
-      "senderDeviceId": "${deviceProfile.deviceId}",
-      "senderDeviceName": "${deviceProfile.deviceName}",
-      "senderCategory": "${deviceProfile.category}",
-      "targetCategory": "any",
-      "isSensitive": false,
-      "createdAt": '"$(date +%s)000"',
-      "updatedAt": '"$(date +%s)000"'
-    }
-  ]'`}</pre>
+  -d '{
+    "kind": "url",
+    "status": "new",
+    "realmId": "'$USER_EMAIL'",
+    "owner": "'$USER_EMAIL'",
+    "content": {
+      "url": "https://example.com"
+    },
+    "title": "Example Website",
+    "senderDeviceName": "API Script",
+    "senderCategory": "any",
+    "targetCategory": "any",
+    "isSensitive": false,
+    "createdAt": '"$(date +%s)000"',
+    "updatedAt": '"$(date +%s)000"'
+  }'`}</pre>
                                                             <button
                                                                 onClick={() => handleCopyCode(
-                                                                    `curl -s "$DB_URL/my/handoffItems" \\\n  -H "Authorization: Bearer $TOKEN" \\\n  -H "Content-Type: application/json" \\\n  -d '[\n    {\n      "kind": "url",\n      "status": "new",\n      "content": {\n        "url": "https://example.com"\n      },\n      "title": "Example Website",\n      "preview": "Check out this link",\n      "senderDeviceId": "${deviceProfile.deviceId}",\n      "senderDeviceName": "${deviceProfile.deviceName}",\n      "senderCategory": "${deviceProfile.category}",\n      "targetCategory": "any",\n      "isSensitive": false,\n      "createdAt": $(date +%s)000,\n      "updatedAt": $(date +%s)000\n    }\n  ]'`,
+                                                                    `USER_EMAIL="${currentUser?.email || '<your-email>'}"\n\ncurl -s "$DB_URL/all/handoffItems" \\\n  -H "Authorization: Bearer $TOKEN" \\\n  -H "Content-Type: application/json" \\\n  -d '{\n    "kind": "url",\n    "status": "new",\n    "realmId": "'\$USER_EMAIL'",\n    "owner": "'\$USER_EMAIL'",\n    "content": {\n      "url": "https://example.com"\n    },\n    "title": "Example Website",\n    "senderDeviceName": "API Script",\n    "senderCategory": "any",\n    "targetCategory": "any",\n    "isSensitive": false,\n    "createdAt": $(date +%s)000,\n    "updatedAt": $(date +%s)000\n  }'`,
                                                                     'url-item'
                                                                 )}
                                                                 className="absolute top-2 right-2 p-2 bg-white/10 hover:bg-white/20 rounded-md transition-colors"
@@ -741,30 +741,30 @@ TOKEN="$(curl -s "$DB_URL/token" \\
                                                     <div className="space-y-2">
                                                         <h5 className="text-xs font-medium text-gray-300">Text Item Example:</h5>
                                                         <div className="relative">
-                                                            <pre className="text-xs bg-black/40 p-3 rounded-lg overflow-x-auto border border-white/10 text-gray-300">{`curl -s "$DB_URL/my/handoffItems" \\
+                                                            <pre className="text-xs bg-black/40 p-3 rounded-lg overflow-x-auto border border-white/10 text-gray-300">{`USER_EMAIL="${currentUser?.email || '<your-email>'}"
+
+curl -s "$DB_URL/all/handoffItems" \\
   -H "Authorization: Bearer $TOKEN" \\
   -H "Content-Type: application/json" \\
-  -d '[
-    {
-      "kind": "text",
-      "status": "new",
-      "content": {
-        "text": "Remember to check X before Y"
-      },
-      "title": "Quick Note",
-      "preview": "Remember to check X before Y",
-      "senderDeviceId": "${deviceProfile.deviceId}",
-      "senderDeviceName": "${deviceProfile.deviceName}",
-      "senderCategory": "${deviceProfile.category}",
-      "targetCategory": "any",
-      "isSensitive": false,
-      "createdAt": '"$(date +%s)000"',
-      "updatedAt": '"$(date +%s)000"'
-    }
-  ]'`}</pre>
+  -d '{
+    "kind": "text",
+    "status": "new",
+    "realmId": "'$USER_EMAIL'",
+    "owner": "'$USER_EMAIL'",
+    "content": {
+      "text": "Remember to check X before Y"
+    },
+    "title": "Quick Note",
+    "senderDeviceName": "API Script",
+    "senderCategory": "any",
+    "targetCategory": "any",
+    "isSensitive": false,
+    "createdAt": '"$(date +%s)000"',
+    "updatedAt": '"$(date +%s)000"'
+  }'`}</pre>
                                                             <button
                                                                 onClick={() => handleCopyCode(
-                                                                    `curl -s "$DB_URL/my/handoffItems" \\\n  -H "Authorization: Bearer $TOKEN" \\\n  -H "Content-Type: application/json" \\\n  -d '[\n    {\n      "kind": "text",\n      "status": "new",\n      "content": {\n        "text": "Remember to check X before Y"\n      },\n      "title": "Quick Note",\n      "preview": "Remember to check X before Y",\n      "senderDeviceId": "${deviceProfile.deviceId}",\n      "senderDeviceName": "${deviceProfile.deviceName}",\n      "senderCategory": "${deviceProfile.category}",\n      "targetCategory": "any",\n      "isSensitive": false,\n      "createdAt": $(date +%s)000,\n      "updatedAt": $(date +%s)000\n    }\n  ]'`,
+                                                                    `USER_EMAIL="${currentUser?.email || '<your-email>'}"\n\ncurl -s "$DB_URL/all/handoffItems" \\\n  -H "Authorization: Bearer $TOKEN" \\\n  -H "Content-Type: application/json" \\\n  -d '{\n    "kind": "text",\n    "status": "new",\n    "realmId": "'\$USER_EMAIL'",\n    "owner": "'\$USER_EMAIL'",\n    "content": {\n      "text": "Remember to check X before Y"\n    },\n    "title": "Quick Note",\n    "senderDeviceName": "API Script",\n    "senderCategory": "any",\n    "targetCategory": "any",\n    "isSensitive": false,\n    "createdAt": $(date +%s)000,\n    "updatedAt": $(date +%s)000\n  }'`,
                                                                     'text-item'
                                                                 )}
                                                                 className="absolute top-2 right-2 p-2 bg-white/10 hover:bg-white/20 rounded-md transition-colors"

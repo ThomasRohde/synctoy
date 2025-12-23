@@ -23,8 +23,6 @@ import {
     AlertTriangle,
     Trash2,
     AlertCircle,
-    Download,
-    MonitorSmartphone,
     ArrowLeftRight,
     Terminal,
     ChevronDown,
@@ -34,7 +32,7 @@ import {
 } from 'lucide-react';
 import { useApp, useNotification, useDb } from '../context';
 import { Header, CategorySelector } from '../components';
-import { useSyncState, useCurrentUser, usePwaInstall, useClipboard, type SyncStatus } from '../hooks';
+import { useSyncState, useCurrentUser, useClipboard, type SyncStatus } from '../hooks';
 import { cloudDb } from '../utils/storage/db';
 
 // Helper to get sync status display info
@@ -78,7 +76,6 @@ export function Settings() {
     const db = useDb();
     const syncState = useSyncState();
     const currentUser = useCurrentUser();
-    const pwaInstall = usePwaInstall();
     const clipboard = useClipboard();
     const [activeSection, setActiveSection] = useState('device');
     const [isClearingArchived, setIsClearingArchived] = useState(false);
@@ -586,48 +583,6 @@ export function Settings() {
                                     </p>
                                 </div>
 
-                                {/* Install App card */}
-                                <div className="glass-card rounded-xl p-4 space-y-3">
-                                    <h3 className="font-medium flex items-center gap-2">
-                                        <MonitorSmartphone className="w-4 h-4" />
-                                        Install App
-                                    </h3>
-                                    {pwaInstall.isInstalled ? (
-                                        <div className="flex items-center gap-3 p-3 bg-green-500/10 rounded-lg border border-green-500/20">
-                                            <CheckCircle className="w-5 h-5 text-green-400" />
-                                            <p className="text-sm text-gray-300">App is installed on this device</p>
-                                        </div>
-                                    ) : pwaInstall.canInstall ? (
-                                        <div className="space-y-3">
-                                            <p className="text-sm text-gray-400">
-                                                Install Handoff Lite for quick access from your desktop or taskbar.
-                                            </p>
-                                            <button
-                                                onClick={async () => {
-                                                    const accepted = await pwaInstall.promptInstall();
-                                                    if (accepted) {
-                                                        notify.success('App installed successfully!');
-                                                    }
-                                                }}
-                                                className="w-full px-4 py-3 min-h-[44px] bg-primary text-white rounded-lg hover:bg-primary/80 transition-colors flex items-center justify-center gap-2"
-                                            >
-                                                <Download className="w-5 h-5" />
-                                                Install Handoff Lite
-                                            </button>
-                                        </div>
-                                    ) : pwaInstall.manualInstallInstructions ? (
-                                        <div className="space-y-3">
-                                            <p className="text-sm text-gray-400">
-                                                {pwaInstall.manualInstallInstructions}
-                                            </p>
-                                        </div>
-                                    ) : (
-                                        <p className="text-sm text-gray-400">
-                                            Open this app in Chrome or Edge to enable installation.
-                                        </p>
-                                    )}
-                                </div>
-
                                 <div className="glass-card rounded-xl p-4 space-y-3">
                                     <h3 className="font-medium">Features</h3>
                                     <ul className="space-y-2 text-sm text-gray-400">
@@ -658,13 +613,6 @@ export function Settings() {
                                     </ul>
                                 </div>
 
-                                <div className="glass-card rounded-xl p-4 space-y-3">
-                                    <h3 className="font-medium">Device ID</h3>
-                                    <code className="block text-xs text-gray-400 bg-black/20 p-2 rounded break-all">
-                                        {deviceProfile.deviceId}
-                                    </code>
-                                </div>
-
                                 {/* API Documentation - Only show when logged in */}
                                 {currentUser?.isLoggedIn && (
                                     <div className="glass-card rounded-xl p-4 space-y-4">
@@ -684,7 +632,7 @@ export function Settings() {
                                         </button>
 
                                         {isApiDocsExpanded && (
-                                            <div className="space-y-4 pt-2 max-h-72 overflow-y-auto pr-2">
+                                            <div className="space-y-4 pt-2">
                                                 <p className="text-sm text-gray-400">
                                                     SyncToy stores items locally in Dexie (IndexedDB) and can optionally sync them via Dexie Cloud. 
                                                     When Dexie Cloud is connected, you can also insert items from outside the app (for example from a terminal) 

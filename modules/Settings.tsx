@@ -696,9 +696,14 @@ export function Settings() {
                                                         <AlertTriangle className="w-4 h-4 text-amber-400" />
                                                         Prerequisites
                                                     </h4>
-                                                    <ul className="text-sm text-gray-400 space-y-1 list-disc list-inside">
+                                                    <ul className="text-sm text-gray-400 space-y-1.5 list-disc list-inside">
                                                         <li>Your database URL: <code className="text-xs bg-black/20 px-1 py-0.5 rounded">{configuredDbUrl}</code></li>
-                                                        <li>Dexie Cloud API client credentials (from <code className="text-xs bg-black/20 px-1 py-0.5 rounded">dexie-cloud.key</code>)</li>
+                                                        <li>Dexie Cloud API client credentials from <code className="text-xs bg-black/20 px-1 py-0.5 rounded">dexie-cloud.key</code> file:
+                                                            <div className="ml-6 mt-1 text-xs">
+                                                                <div>• <code className="bg-black/20 px-1 py-0.5 rounded">client_id</code>: Found on line 2 of dexie-cloud.key</div>
+                                                                <div>• <code className="bg-black/20 px-1 py-0.5 rounded">client_secret</code>: Found on line 3 of dexie-cloud.key</div>
+                                                            </div>
+                                                        </li>
                                                         <li className="text-amber-400">⚠️ Never commit <code className="text-xs bg-black/20 px-1 py-0.5 rounded">dexie-cloud.key</code> to git or expose in frontend code</li>
                                                     </ul>
                                                 </div>
@@ -709,7 +714,7 @@ export function Settings() {
                                                         Request a token using client credentials. For terminal usage, you'll typically use <code className="text-xs bg-black/20 px-1 py-0.5 rounded">grant_type: "client_credentials"</code>.
                                                     </p>
                                                     <div className="relative">
-                                                        <pre className="text-xs bg-black/40 p-3 rounded-lg overflow-x-auto border border-white/10">
+                                                        <pre className="text-xs bg-black/40 p-3 rounded-lg overflow-auto border border-white/10 max-h-48">
                                                             <code className="text-gray-300">{`DB_URL="${configuredDbUrl}"
 CLIENT_ID="<from dexie-cloud.key>"
 CLIENT_SECRET="<from dexie-cloud.key>"
@@ -749,7 +754,7 @@ TOKEN="$(curl -s "$DB_URL/token" \\
                                                     <div className="space-y-2">
                                                         <h5 className="text-xs font-medium text-gray-300">URL Item Example:</h5>
                                                         <div className="relative">
-                                                            <pre className="text-xs bg-black/40 p-3 rounded-lg overflow-x-auto border border-white/10">
+                                                            <pre className="text-xs bg-black/40 p-3 rounded-lg overflow-auto border border-white/10 max-h-64">
                                                                 <code className="text-gray-300">{`curl -s "$DB_URL/my/handoffItems" \\
   -H "Authorization: Bearer $TOKEN" \\
   -H "Content-Type: application/json" \\
@@ -792,7 +797,7 @@ TOKEN="$(curl -s "$DB_URL/token" \\
                                                     <div className="space-y-2">
                                                         <h5 className="text-xs font-medium text-gray-300">Text Item Example:</h5>
                                                         <div className="relative">
-                                                            <pre className="text-xs bg-black/40 p-3 rounded-lg overflow-x-auto border border-white/10">
+                                                            <pre className="text-xs bg-black/40 p-3 rounded-lg overflow-auto border border-white/10 max-h-64">
                                                                 <code className="text-gray-300">{`curl -s "$DB_URL/my/handoffItems" \\
   -H "Authorization: Bearer $TOKEN" \\
   -H "Content-Type: application/json" \\

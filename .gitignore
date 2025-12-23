@@ -6,3 +6,4 @@ dist
 # Dexie Cloud credentials - NEVER COMMIT
 dexie-cloud.key
 dexie-cloud.json
+debug-export.json

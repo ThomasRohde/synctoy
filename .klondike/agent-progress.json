@@ -135,12 +135,6 @@
       ".klondike/agent-progress.json",
       "agent-progress.md"
     ],
-    "priorityFeatures": [
-      {
-        "id": "F032",
-        "description": "Dexie Cloud REST API Documentation - collapsible section in Settings About page showing terminal curl examples for sending items via Dexie Cloud API",
-        "status": "in-progress"
-      }
-    ]
+    "priorityFeatures": []
   }
 }

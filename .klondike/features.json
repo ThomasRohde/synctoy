@@ -868,11 +868,19 @@
         "Security warning about keeping client_secret out of git and frontend"
       ],
       "estimatedEffort": null,
-      "status": "in-progress",
-      "passes": false,
-      "verifiedAt": null,
-      "verifiedBy": null,
-      "evidenceLinks": [],
+      "status": "verified",
+      "passes": true,
+      "verifiedAt": "2025-12-23T13:14:34.148284",
+      "verifiedBy": "coding-agent",
+      "evidenceLinks": [
+        "Tested all acceptance criteria: (1) Section only visible when logged in - confirmed conditional rendering",
+        "(2) Collapsible UI works with expand/collapse toggle",
+        "(3) Token request example shows configured databaseUrl",
+        "(4) URL item POST example uses /my/handoffItems with correct HandoffItem fields",
+        "(5) Text item POST example uses /my/handoffItems with correct fields",
+        "(6) Copy-to-clipboard buttons work for each code block using useClipboard hook with visual feedback",
+        "(7) Security warning prominently displayed about client_secret. Build and lint pass successfully."
+      ],
       "blockedBy": null,
       "lastWorkedOn": "2025-12-23T13:11:25.342786",
       "notes": "Implementation: Add new card in Settings About section. Use useCurrentUser() hook to check isLoggedIn. Get databaseUrl from cloudDb.cloud.options?.databaseUrl. Use /my/ endpoint (not /all/) so no realmId needed. Reuse glass-card styling pattern. Edge cases: Handle undefined databaseUrl gracefully. Dependencies: F006 (Dexie Cloud Sync), F021 (Cloud URL Config). Context: Enables power users to integrate SyncToy with terminal scripts, cron jobs, or external services. Gotchas: Ensure code blocks use proper escaping for bash. Match HandoffItem type exactly (kind, content, status, senderDeviceId, etc.)."
@@ -880,8 +888,8 @@
   ],
   "metadata": {
     "createdAt": "2025-12-22T03:40:28.896801",
-    "lastUpdated": "2025-12-23T13:10:00.679594",
+    "lastUpdated": "2025-12-23T13:14:34.148295",
     "totalFeatures": 32,
-    "passingFeatures": 31
+    "passingFeatures": 32
   }
 }

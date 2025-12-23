@@ -24,7 +24,6 @@ klondike feature list  # List all features
 ### Current Priority Features
 | ID | Description | Status |
 |----|-------------|--------|
-| F032 | Dexie Cloud REST API Documentation - collapsible section in Settings About page showing terminal curl examples for sending items via Dexie Cloud API | 🔄 In progress |
 
 ---
 

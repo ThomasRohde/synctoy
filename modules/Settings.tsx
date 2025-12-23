@@ -632,7 +632,7 @@ export function Settings() {
                                         </button>
 
                                         {isApiDocsExpanded && (
-                                            <div className="space-y-4 pt-2">
+                                            <div className="space-y-4 pt-2 max-h-96 overflow-y-auto">
                                                 <p className="text-sm text-gray-400">
                                                     SyncToy stores items locally in Dexie (IndexedDB) and can optionally sync them via Dexie Cloud. 
                                                     When Dexie Cloud is connected, you can also insert items from outside the app (for example from a terminal) 

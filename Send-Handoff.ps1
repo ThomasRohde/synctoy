@@ -3,8 +3,17 @@
     Send a URL or text message to your Synctoy inbox via Dexie Cloud REST API.
 
 .DESCRIPTION
-    This script reads credentials from dexie-cloud.key and dexie-cloud.json,
-    authenticates with Dexie Cloud, and sends items directly to a user's inbox.
+    This script authenticates with Dexie Cloud and sends items directly to a user's inbox.
+    
+    Credentials are read from environment variables:
+      - DEXIE_CLOUD_URL: The database URL (e.g., https://zw1o9u4na.dexie.cloud)
+      - DEXIE_CLIENT_ID: Client ID from dexie-cloud.key
+      - DEXIE_CLIENT_SECRET: Client secret from dexie-cloud.key
+
+    To set these permanently (run once in PowerShell as admin or user):
+      [Environment]::SetEnvironmentVariable("DEXIE_CLOUD_URL", "https://xxx.dexie.cloud", "User")
+      [Environment]::SetEnvironmentVariable("DEXIE_CLIENT_ID", "your-client-id", "User")
+      [Environment]::SetEnvironmentVariable("DEXIE_CLIENT_SECRET", "your-client-secret", "User")
 
 .PARAMETER Url
     A URL to send. Mutually exclusive with -Text.
@@ -56,43 +65,27 @@ param(
     [string]$TargetCategory = "any"
 )
 
-# Determine script directory for relative paths
-$ScriptDir = $PSScriptRoot
-if (-not $ScriptDir) {
-    $ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
-}
-if (-not $ScriptDir) {
-    $ScriptDir = Get-Location
-}
+# Read credentials from environment variables
+$DbUrl = $env:DEXIE_CLOUD_URL
+$ClientId = $env:DEXIE_CLIENT_ID
+$ClientSecret = $env:DEXIE_CLIENT_SECRET
 
-# Load configuration files
-$KeyFile = Join-Path $ScriptDir "dexie-cloud.key"
-$ConfigFile = Join-Path $ScriptDir "dexie-cloud.json"
+if (-not $DbUrl -or -not $ClientId -or -not $ClientSecret) {
+    Write-Error @"
+Missing environment variables. Please set:
+  DEXIE_CLOUD_URL     - Database URL (e.g., https://xxx.dexie.cloud)
+  DEXIE_CLIENT_ID     - Client ID from dexie-cloud.key
+  DEXIE_CLIENT_SECRET - Client secret from dexie-cloud.key
 
-if (-not (Test-Path $KeyFile)) {
-    Write-Error "dexie-cloud.key not found at $KeyFile"
+To set permanently (run in PowerShell):
+  [Environment]::SetEnvironmentVariable("DEXIE_CLOUD_URL", "https://xxx.dexie.cloud", "User")
+  [Environment]::SetEnvironmentVariable("DEXIE_CLIENT_ID", "your-client-id", "User")
+  [Environment]::SetEnvironmentVariable("DEXIE_CLIENT_SECRET", "your-client-secret", "User")
+
+Then restart your terminal.
+"@
     exit 1
 }
-
-if (-not (Test-Path $ConfigFile)) {
-    Write-Error "dexie-cloud.json not found at $ConfigFile"
-    exit 1
-}
-
-# Parse configuration
-$Config = Get-Content $ConfigFile -Raw | ConvertFrom-Json
-$DbUrl = $Config.dbUrl
-
-$KeyData = Get-Content $KeyFile -Raw | ConvertFrom-Json
-$Credentials = $KeyData.$DbUrl
-
-if (-not $Credentials) {
-    Write-Error "No credentials found for $DbUrl in dexie-cloud.key"
-    exit 1
-}
-
-$ClientId = $Credentials.clientId
-$ClientSecret = $Credentials.clientSecret
 
 # Validate input
 if (-not $Url -and -not $Text) {

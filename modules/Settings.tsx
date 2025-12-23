@@ -714,8 +714,7 @@ export function Settings() {
                                                         Request a token using client credentials. For terminal usage, you'll typically use <code className="text-xs bg-black/20 px-1 py-0.5 rounded">grant_type: "client_credentials"</code>.
                                                     </p>
                                                     <div className="relative">
-                                                        <pre className="text-xs bg-black/40 p-3 rounded-lg overflow-auto border border-white/10 max-h-48">
-                                                            <code className="text-gray-300">{`DB_URL="${configuredDbUrl}"
+                                                        <pre className="text-xs bg-black/40 p-3 rounded-lg overflow-auto border border-white/10 max-h-48 text-gray-300">{`DB_URL="${configuredDbUrl}"
 CLIENT_ID="<from dexie-cloud.key>"
 CLIENT_SECRET="<from dexie-cloud.key>"
 
@@ -726,8 +725,7 @@ TOKEN="$(curl -s "$DB_URL/token" \\
     \\"scopes\\": [\\"ACCESS_DB\\",\\"GLOBAL_READ\\",\\"GLOBAL_WRITE\\"],
     \\"client_id\\": \\"$CLIENT_ID\\",
     \\"client_secret\\": \\"$CLIENT_SECRET\\"
-  }" | jq -r .accessToken)"`}</code>
-                                                        </pre>
+  }" | jq -r .accessToken)"`}</pre>
                                                         <button
                                                             onClick={() => handleCopyCode(
                                                                 `DB_URL="${configuredDbUrl}"\nCLIENT_ID="<from dexie-cloud.key>"\nCLIENT_SECRET="<from dexie-cloud.key>"\n\nTOKEN="$(curl -s "$DB_URL/token" \\\n  -H "Content-Type: application/json" \\\n  -d "{\n    \\"grant_type\\": \\"client_credentials\\",\n    \\"scopes\\": [\\"ACCESS_DB\\",\\"GLOBAL_READ\\",\\"GLOBAL_WRITE\\"],\n    \\"client_id\\": \\"$CLIENT_ID\\",\n    \\"client_secret\\": \\"$CLIENT_SECRET\\"\n  }" | jq -r .accessToken)"`,
@@ -754,8 +752,7 @@ TOKEN="$(curl -s "$DB_URL/token" \\
                                                     <div className="space-y-2">
                                                         <h5 className="text-xs font-medium text-gray-300">URL Item Example:</h5>
                                                         <div className="relative">
-                                                            <pre className="text-xs bg-black/40 p-3 rounded-lg overflow-auto border border-white/10 max-h-64">
-                                                                <code className="text-gray-300">{`curl -s "$DB_URL/my/handoffItems" \\
+                                                            <pre className="text-xs bg-black/40 p-3 rounded-lg overflow-auto border border-white/10 max-h-64 text-gray-300">{`curl -s "$DB_URL/my/handoffItems" \\
   -H "Authorization: Bearer $TOKEN" \\
   -H "Content-Type: application/json" \\
   -d '[
@@ -775,8 +772,7 @@ TOKEN="$(curl -s "$DB_URL/token" \\
       "createdAt": '"$(date +%s)000"',
       "updatedAt": '"$(date +%s)000"'
     }
-  ]'`}</code>
-                                                            </pre>
+  ]'`}</pre>
                                                             <button
                                                                 onClick={() => handleCopyCode(
                                                                     `curl -s "$DB_URL/my/handoffItems" \\\n  -H "Authorization: Bearer $TOKEN" \\\n  -H "Content-Type: application/json" \\\n  -d '[\n    {\n      "kind": "url",\n      "status": "new",\n      "content": {\n        "url": "https://example.com"\n      },\n      "title": "Example Website",\n      "preview": "Check out this link",\n      "senderDeviceId": "${deviceProfile.deviceId}",\n      "senderDeviceName": "${deviceProfile.deviceName}",\n      "senderCategory": "${deviceProfile.category}",\n      "targetCategory": "any",\n      "isSensitive": false,\n      "createdAt": $(date +%s)000,\n      "updatedAt": $(date +%s)000\n    }\n  ]'`,
@@ -797,8 +793,7 @@ TOKEN="$(curl -s "$DB_URL/token" \\
                                                     <div className="space-y-2">
                                                         <h5 className="text-xs font-medium text-gray-300">Text Item Example:</h5>
                                                         <div className="relative">
-                                                            <pre className="text-xs bg-black/40 p-3 rounded-lg overflow-auto border border-white/10 max-h-64">
-                                                                <code className="text-gray-300">{`curl -s "$DB_URL/my/handoffItems" \\
+                                                            <pre className="text-xs bg-black/40 p-3 rounded-lg overflow-auto border border-white/10 max-h-64 text-gray-300">{`curl -s "$DB_URL/my/handoffItems" \\
   -H "Authorization: Bearer $TOKEN" \\
   -H "Content-Type: application/json" \\
   -d '[
@@ -818,8 +813,7 @@ TOKEN="$(curl -s "$DB_URL/token" \\
       "createdAt": '"$(date +%s)000"',
       "updatedAt": '"$(date +%s)000"'
     }
-  ]'`}</code>
-                                                            </pre>
+  ]'`}</pre>
                                                             <button
                                                                 onClick={() => handleCopyCode(
                                                                     `curl -s "$DB_URL/my/handoffItems" \\\n  -H "Authorization: Bearer $TOKEN" \\\n  -H "Content-Type: application/json" \\\n  -d '[\n    {\n      "kind": "text",\n      "status": "new",\n      "content": {\n        "text": "Remember to check X before Y"\n      },\n      "title": "Quick Note",\n      "preview": "Remember to check X before Y",\n      "senderDeviceId": "${deviceProfile.deviceId}",\n      "senderDeviceName": "${deviceProfile.deviceName}",\n      "senderCategory": "${deviceProfile.category}",\n      "targetCategory": "any",\n      "isSensitive": false,\n      "createdAt": $(date +%s)000,\n      "updatedAt": $(date +%s)000\n    }\n  ]'`,

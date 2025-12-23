@@ -24,6 +24,7 @@ klondike feature list  # List all features
 ### Current Priority Features
 | ID | Description | Status |
 |----|-------------|--------|
+| F032 | Dexie Cloud REST API Documentation - collapsible section in Settings About page showing terminal curl examples for sending items via Dexie Cloud API | 🔄 In progress |
 
 ---
 
@@ -174,6 +175,28 @@ klondike feature list  # List all features
 **Agent**: Coding Agent
 **Duration**: (in progress)
 **Focus**: F031 - Markdown Rendering for Text Handoffs
+
+#### Completed
+- None
+
+#### In Progress
+- Session started
+
+#### Blockers
+- None
+
+#### Recommended Next Steps
+1. Continue implementation
+
+#### Technical Notes
+- None
+
+---
+
+### Session 8 - 2025-12-23
+**Agent**: Coding Agent
+**Duration**: (in progress)
+**Focus**: F032 - Dexie Cloud REST API Documentation
 
 #### Completed
 - None

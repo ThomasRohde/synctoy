@@ -851,12 +851,37 @@
       "blockedBy": null,
       "lastWorkedOn": "2025-12-22T09:12:06.257819",
       "notes": "Implementation: Use react-markdown with remark-gfm for GFM support. Add rehype-highlight for code syntax highlighting. Create isMarkdown(text) heuristic in utils/markdown.ts checking for: headings (#), code fences (```), bullet lists (- or *), numbered lists, bold/italic markers. Edge cases: Mixed content with partial markdown, very long code blocks (add scroll), nested formatting. Dependencies: None - new feature. Context: AI chatbot outputs (Claude, ChatGPT, etc.) use markdown extensively - this makes shared responses readable. Gotchas: Sanitize HTML in markdown to prevent XSS. Ensure dark theme compatible styling. Code blocks need horizontal scroll on mobile."
+    },
+    {
+      "id": "F032",
+      "category": "docs",
+      "priority": 4,
+      "description": "Dexie Cloud REST API Documentation - collapsible section in Settings About page showing terminal curl examples for sending items via Dexie Cloud API",
+      "dependencies": [],
+      "acceptanceCriteria": [
+        "Section only visible when Dexie Cloud is connected (user.isLoggedIn === true)",
+        "Collapsible accordion UI with expand/collapse toggle",
+        "Token request curl example with configured databaseUrl pre-filled",
+        "URL item POST example using /my/handoffItems endpoint with correct HandoffItem fields",
+        "Text item POST example using /my/handoffItems endpoint with correct HandoffItem fields",
+        "Copy-to-clipboard button for each code block using existing useClipboard hook",
+        "Security warning about keeping client_secret out of git and frontend"
+      ],
+      "estimatedEffort": null,
+      "status": "in-progress",
+      "passes": false,
+      "verifiedAt": null,
+      "verifiedBy": null,
+      "evidenceLinks": [],
+      "blockedBy": null,
+      "lastWorkedOn": "2025-12-23T13:11:25.342786",
+      "notes": "Implementation: Add new card in Settings About section. Use useCurrentUser() hook to check isLoggedIn. Get databaseUrl from cloudDb.cloud.options?.databaseUrl. Use /my/ endpoint (not /all/) so no realmId needed. Reuse glass-card styling pattern. Edge cases: Handle undefined databaseUrl gracefully. Dependencies: F006 (Dexie Cloud Sync), F021 (Cloud URL Config). Context: Enables power users to integrate SyncToy with terminal scripts, cron jobs, or external services. Gotchas: Ensure code blocks use proper escaping for bash. Match HandoffItem type exactly (kind, content, status, senderDeviceId, etc.)."
     }
   ],
   "metadata": {
     "createdAt": "2025-12-22T03:40:28.896801",
-    "lastUpdated": "2025-12-22T09:15:56.720644",
-    "totalFeatures": 31,
+    "lastUpdated": "2025-12-23T13:10:00.679594",
+    "totalFeatures": 32,
     "passingFeatures": 31
   }
 }

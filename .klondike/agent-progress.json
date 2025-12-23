@@ -111,6 +111,20 @@
       "blockers": [],
       "nextSteps": [],
       "technicalNotes": []
+    },
+    {
+      "sessionNumber": 8,
+      "date": "2025-12-23",
+      "agent": "Coding Agent",
+      "duration": "(in progress)",
+      "focus": "F032 - Dexie Cloud REST API Documentation",
+      "completed": [],
+      "inProgress": [
+        "Session started"
+      ],
+      "blockers": [],
+      "nextSteps": [],
+      "technicalNotes": []
     }
   ],
   "quickReference": {
@@ -121,6 +135,12 @@
       ".klondike/agent-progress.json",
       "agent-progress.md"
     ],
-    "priorityFeatures": []
+    "priorityFeatures": [
+      {
+        "id": "F032",
+        "description": "Dexie Cloud REST API Documentation - collapsible section in Settings About page showing terminal curl examples for sending items via Dexie Cloud API",
+        "status": "in-progress"
+      }
+    ]
   }
 }

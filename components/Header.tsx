@@ -74,10 +74,11 @@ export function Header({ title, subtitle, showBack, onBack, actions, showSyncSta
                 </div>
                 <div className="flex items-center gap-2">
                     {showSyncStatus && (
-                        <SyncIcon
-                            className={`w-5 h-5 ${syncIndicator.color}`}
-                            title={syncIndicator.title}
-                        />
+                        <span title={syncIndicator.title}>
+                            <SyncIcon
+                                className={`w-5 h-5 ${syncIndicator.color}`}
+                            />
+                        </span>
                     )}
                     {actions}
                 </div>

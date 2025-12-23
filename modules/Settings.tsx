@@ -26,10 +26,15 @@ import {
     Download,
     MonitorSmartphone,
     ArrowLeftRight,
+    Terminal,
+    ChevronDown,
+    ChevronUp,
+    Copy,
+    Check,
 } from 'lucide-react';
 import { useApp, useNotification, useDb } from '../context';
 import { Header, CategorySelector } from '../components';
-import { useSyncState, useCurrentUser, usePwaInstall, type SyncStatus } from '../hooks';
+import { useSyncState, useCurrentUser, usePwaInstall, useClipboard, type SyncStatus } from '../hooks';
 import { cloudDb } from '../utils/storage/db';
 
 // Helper to get sync status display info
@@ -74,11 +79,27 @@ export function Settings() {
     const syncState = useSyncState();
     const currentUser = useCurrentUser();
     const pwaInstall = usePwaInstall();
+    const clipboard = useClipboard();
     const [activeSection, setActiveSection] = useState('device');
     const [isClearingArchived, setIsClearingArchived] = useState(false);
     const [cloudUrlInput, setCloudUrlInput] = useState(deviceProfile.cloudUrl || '');
+    const [isApiDocsExpanded, setIsApiDocsExpanded] = useState(false);
+    const [copiedBlock, setCopiedBlock] = useState<string | null>(null);
 
     const syncStatusInfo = getSyncStatusInfo(syncState.status);
+    
+    // Get configured database URL for API examples
+    const configuredDbUrl = cloudDb.cloud.options?.databaseUrl || deviceProfile.cloudUrl || 'https://<your-db>.dexie.cloud';
+    
+    // Handle copy with visual feedback
+    const handleCopyCode = async (code: string, blockId: string) => {
+        const success = await clipboard.copy(code);
+        if (success) {
+            setCopiedBlock(blockId);
+            notify.success('Copied to clipboard');
+            setTimeout(() => setCopiedBlock(null), 2000);
+        }
+    };
 
     // Sync cloudUrlInput with deviceProfile changes
     useEffect(() => {
@@ -643,6 +664,189 @@ export function Settings() {
                                         {deviceProfile.deviceId}
                                     </code>
                                 </div>
+
+                                {/* API Documentation - Only show when logged in */}
+                                {currentUser?.isLoggedIn && (
+                                    <div className="glass-card rounded-xl p-4 space-y-4">
+                                        <button
+                                            onClick={() => setIsApiDocsExpanded(!isApiDocsExpanded)}
+                                            className="w-full flex items-center justify-between text-left group"
+                                        >
+                                            <div className="flex items-center gap-2">
+                                                <Terminal className="w-4 h-4" />
+                                                <h3 className="font-medium">Send Items via REST API</h3>
+                                            </div>
+                                            {isApiDocsExpanded ? (
+                                                <ChevronUp className="w-5 h-5 text-gray-400 group-hover:text-white transition-colors" />
+                                            ) : (
+                                                <ChevronDown className="w-5 h-5 text-gray-400 group-hover:text-white transition-colors" />
+                                            )}
+                                        </button>
+
+                                        {isApiDocsExpanded && (
+                                            <div className="space-y-4 pt-2">
+                                                <p className="text-sm text-gray-400">
+                                                    SyncToy stores items locally in Dexie (IndexedDB) and can optionally sync them via Dexie Cloud. 
+                                                    When Dexie Cloud is connected, you can also insert items from outside the app (for example from a terminal) 
+                                                    by calling the Dexie Cloud REST API. The PWA will then sync the new items automatically.
+                                                </p>
+
+                                                <div className="space-y-2">
+                                                    <h4 className="text-sm font-medium flex items-center gap-2">
+                                                        <AlertTriangle className="w-4 h-4 text-amber-400" />
+                                                        Prerequisites
+                                                    </h4>
+                                                    <ul className="text-sm text-gray-400 space-y-1 list-disc list-inside">
+                                                        <li>Your database URL: <code className="text-xs bg-black/20 px-1 py-0.5 rounded">{configuredDbUrl}</code></li>
+                                                        <li>Dexie Cloud API client credentials (from <code className="text-xs bg-black/20 px-1 py-0.5 rounded">dexie-cloud.key</code>)</li>
+                                                        <li className="text-amber-400">⚠️ Never commit <code className="text-xs bg-black/20 px-1 py-0.5 rounded">dexie-cloud.key</code> to git or expose in frontend code</li>
+                                                    </ul>
+                                                </div>
+
+                                                <div className="space-y-3">
+                                                    <h4 className="text-sm font-medium">Step 1: Get Access Token</h4>
+                                                    <p className="text-sm text-gray-400">
+                                                        Request a token using client credentials. For terminal usage, you'll typically use <code className="text-xs bg-black/20 px-1 py-0.5 rounded">grant_type: "client_credentials"</code>.
+                                                    </p>
+                                                    <div className="relative">
+                                                        <pre className="text-xs bg-black/40 p-3 rounded-lg overflow-x-auto border border-white/10">
+                                                            <code className="text-gray-300">{`DB_URL="${configuredDbUrl}"
+CLIENT_ID="<from dexie-cloud.key>"
+CLIENT_SECRET="<from dexie-cloud.key>"
+
+TOKEN="$(curl -s "$DB_URL/token" \\
+  -H "Content-Type: application/json" \\
+  -d "{
+    \\"grant_type\\": \\"client_credentials\\",
+    \\"scopes\\": [\\"ACCESS_DB\\",\\"GLOBAL_READ\\",\\"GLOBAL_WRITE\\"],
+    \\"client_id\\": \\"$CLIENT_ID\\",
+    \\"client_secret\\": \\"$CLIENT_SECRET\\"
+  }" | jq -r .accessToken)"`}</code>
+                                                        </pre>
+                                                        <button
+                                                            onClick={() => handleCopyCode(
+                                                                `DB_URL="${configuredDbUrl}"\nCLIENT_ID="<from dexie-cloud.key>"\nCLIENT_SECRET="<from dexie-cloud.key>"\n\nTOKEN="$(curl -s "$DB_URL/token" \\\n  -H "Content-Type: application/json" \\\n  -d "{\n    \\"grant_type\\": \\"client_credentials\\",\n    \\"scopes\\": [\\"ACCESS_DB\\",\\"GLOBAL_READ\\",\\"GLOBAL_WRITE\\"],\n    \\"client_id\\": \\"$CLIENT_ID\\",\n    \\"client_secret\\": \\"$CLIENT_SECRET\\"\n  }" | jq -r .accessToken)"`,
+                                                                'token'
+                                                            )}
+                                                            className="absolute top-2 right-2 p-2 bg-white/10 hover:bg-white/20 rounded-md transition-colors"
+                                                            title="Copy to clipboard"
+                                                        >
+                                                            {copiedBlock === 'token' ? (
+                                                                <Check className="w-4 h-4 text-green-400" />
+                                                            ) : (
+                                                                <Copy className="w-4 h-4 text-gray-400" />
+                                                            )}
+                                                        </button>
+                                                    </div>
+                                                </div>
+
+                                                <div className="space-y-3">
+                                                    <h4 className="text-sm font-medium">Step 2: Insert Items</h4>
+                                                    <p className="text-sm text-gray-400">
+                                                        POST items to <code className="text-xs bg-black/20 px-1 py-0.5 rounded">/my/handoffItems</code>. The <code className="text-xs bg-black/20 px-1 py-0.5 rounded">/my/</code> endpoint defaults to your user's realm, so no realmId is needed.
+                                                    </p>
+
+                                                    <div className="space-y-2">
+                                                        <h5 className="text-xs font-medium text-gray-300">URL Item Example:</h5>
+                                                        <div className="relative">
+                                                            <pre className="text-xs bg-black/40 p-3 rounded-lg overflow-x-auto border border-white/10">
+                                                                <code className="text-gray-300">{`curl -s "$DB_URL/my/handoffItems" \\
+  -H "Authorization: Bearer $TOKEN" \\
+  -H "Content-Type: application/json" \\
+  -d '[
+    {
+      "kind": "url",
+      "status": "new",
+      "content": {
+        "url": "https://example.com"
+      },
+      "title": "Example Website",
+      "preview": "Check out this link",
+      "senderDeviceId": "${deviceProfile.deviceId}",
+      "senderDeviceName": "${deviceProfile.deviceName}",
+      "senderCategory": "${deviceProfile.category}",
+      "targetCategory": "any",
+      "isSensitive": false,
+      "createdAt": '"$(date +%s)000"',
+      "updatedAt": '"$(date +%s)000"'
+    }
+  ]'`}</code>
+                                                            </pre>
+                                                            <button
+                                                                onClick={() => handleCopyCode(
+                                                                    `curl -s "$DB_URL/my/handoffItems" \\\n  -H "Authorization: Bearer $TOKEN" \\\n  -H "Content-Type: application/json" \\\n  -d '[\n    {\n      "kind": "url",\n      "status": "new",\n      "content": {\n        "url": "https://example.com"\n      },\n      "title": "Example Website",\n      "preview": "Check out this link",\n      "senderDeviceId": "${deviceProfile.deviceId}",\n      "senderDeviceName": "${deviceProfile.deviceName}",\n      "senderCategory": "${deviceProfile.category}",\n      "targetCategory": "any",\n      "isSensitive": false,\n      "createdAt": $(date +%s)000,\n      "updatedAt": $(date +%s)000\n    }\n  ]'`,
+                                                                    'url-item'
+                                                                )}
+                                                                className="absolute top-2 right-2 p-2 bg-white/10 hover:bg-white/20 rounded-md transition-colors"
+                                                                title="Copy to clipboard"
+                                                            >
+                                                                {copiedBlock === 'url-item' ? (
+                                                                    <Check className="w-4 h-4 text-green-400" />
+                                                                ) : (
+                                                                    <Copy className="w-4 h-4 text-gray-400" />
+                                                                )}
+                                                            </button>
+                                                        </div>
+                                                    </div>
+
+                                                    <div className="space-y-2">
+                                                        <h5 className="text-xs font-medium text-gray-300">Text Item Example:</h5>
+                                                        <div className="relative">
+                                                            <pre className="text-xs bg-black/40 p-3 rounded-lg overflow-x-auto border border-white/10">
+                                                                <code className="text-gray-300">{`curl -s "$DB_URL/my/handoffItems" \\
+  -H "Authorization: Bearer $TOKEN" \\
+  -H "Content-Type: application/json" \\
+  -d '[
+    {
+      "kind": "text",
+      "status": "new",
+      "content": {
+        "text": "Remember to check X before Y"
+      },
+      "title": "Quick Note",
+      "preview": "Remember to check X before Y",
+      "senderDeviceId": "${deviceProfile.deviceId}",
+      "senderDeviceName": "${deviceProfile.deviceName}",
+      "senderCategory": "${deviceProfile.category}",
+      "targetCategory": "any",
+      "isSensitive": false,
+      "createdAt": '"$(date +%s)000"',
+      "updatedAt": '"$(date +%s)000"'
+    }
+  ]'`}</code>
+                                                            </pre>
+                                                            <button
+                                                                onClick={() => handleCopyCode(
+                                                                    `curl -s "$DB_URL/my/handoffItems" \\\n  -H "Authorization: Bearer $TOKEN" \\\n  -H "Content-Type: application/json" \\\n  -d '[\n    {\n      "kind": "text",\n      "status": "new",\n      "content": {\n        "text": "Remember to check X before Y"\n      },\n      "title": "Quick Note",\n      "preview": "Remember to check X before Y",\n      "senderDeviceId": "${deviceProfile.deviceId}",\n      "senderDeviceName": "${deviceProfile.deviceName}",\n      "senderCategory": "${deviceProfile.category}",\n      "targetCategory": "any",\n      "isSensitive": false,\n      "createdAt": $(date +%s)000,\n      "updatedAt": $(date +%s)000\n    }\n  ]'`,
+                                                                    'text-item'
+                                                                )}
+                                                                className="absolute top-2 right-2 p-2 bg-white/10 hover:bg-white/20 rounded-md transition-colors"
+                                                                title="Copy to clipboard"
+                                                            >
+                                                                {copiedBlock === 'text-item' ? (
+                                                                    <Check className="w-4 h-4 text-green-400" />
+                                                                ) : (
+                                                                    <Copy className="w-4 h-4 text-gray-400" />
+                                                                )}
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div className="space-y-2 bg-red-500/10 border border-red-500/20 rounded-lg p-3">
+                                                    <h4 className="text-sm font-medium flex items-center gap-2 text-red-400">
+                                                        <AlertTriangle className="w-4 h-4" />
+                                                        Security Warning
+                                                    </h4>
+                                                    <p className="text-xs text-gray-300">
+                                                        The <code className="bg-black/20 px-1 py-0.5 rounded">client_secret</code> in <code className="bg-black/20 px-1 py-0.5 rounded">dexie-cloud.key</code> is sensitive. 
+                                                        Keep it out of the frontend and out of git. Use it only in terminal scripts or on a server you control.
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        )}
+                                    </div>
+                                )}
                             </div>
                         )}
                     </div>

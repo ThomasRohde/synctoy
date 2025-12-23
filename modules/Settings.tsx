@@ -684,7 +684,7 @@ export function Settings() {
                                         </button>
 
                                         {isApiDocsExpanded && (
-                                            <div className="space-y-4 pt-2">
+                                            <div className="space-y-4 pt-2 max-h-[60vh] overflow-y-auto pr-2">
                                                 <p className="text-sm text-gray-400">
                                                     SyncToy stores items locally in Dexie (IndexedDB) and can optionally sync them via Dexie Cloud. 
                                                     When Dexie Cloud is connected, you can also insert items from outside the app (for example from a terminal) 
@@ -714,7 +714,7 @@ export function Settings() {
                                                         Request a token using client credentials. For terminal usage, you'll typically use <code className="text-xs bg-black/20 px-1 py-0.5 rounded">grant_type: "client_credentials"</code>.
                                                     </p>
                                                     <div className="relative">
-                                                        <pre className="text-xs bg-black/40 p-3 rounded-lg overflow-auto border border-white/10 max-h-48 text-gray-300">{`DB_URL="${configuredDbUrl}"
+                                                        <pre className="text-xs bg-black/40 p-3 rounded-lg overflow-x-auto border border-white/10 text-gray-300">{`DB_URL="${configuredDbUrl}"
 CLIENT_ID="<from dexie-cloud.key>"
 CLIENT_SECRET="<from dexie-cloud.key>"
 
@@ -752,7 +752,7 @@ TOKEN="$(curl -s "$DB_URL/token" \\
                                                     <div className="space-y-2">
                                                         <h5 className="text-xs font-medium text-gray-300">URL Item Example:</h5>
                                                         <div className="relative">
-                                                            <pre className="text-xs bg-black/40 p-3 rounded-lg overflow-auto border border-white/10 max-h-64 text-gray-300">{`curl -s "$DB_URL/my/handoffItems" \\
+                                                            <pre className="text-xs bg-black/40 p-3 rounded-lg overflow-x-auto border border-white/10 text-gray-300">{`curl -s "$DB_URL/my/handoffItems" \\
   -H "Authorization: Bearer $TOKEN" \\
   -H "Content-Type: application/json" \\
   -d '[
@@ -793,7 +793,7 @@ TOKEN="$(curl -s "$DB_URL/token" \\
                                                     <div className="space-y-2">
                                                         <h5 className="text-xs font-medium text-gray-300">Text Item Example:</h5>
                                                         <div className="relative">
-                                                            <pre className="text-xs bg-black/40 p-3 rounded-lg overflow-auto border border-white/10 max-h-64 text-gray-300">{`curl -s "$DB_URL/my/handoffItems" \\
+                                                            <pre className="text-xs bg-black/40 p-3 rounded-lg overflow-x-auto border border-white/10 text-gray-300">{`curl -s "$DB_URL/my/handoffItems" \\
   -H "Authorization: Bearer $TOKEN" \\
   -H "Content-Type: application/json" \\
   -d '[
